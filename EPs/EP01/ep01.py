@@ -6,8 +6,8 @@
 #------------------------------------------------------------------
      
 '''
-    Nome:
-    NUSP:
+    Nome: Caio Túlio de Deus Andrade
+    NUSP: 9797232
 
     Ao preencher esse cabeçalho com o meu nome e o meu número USP,
     declaro que todas as partes originais desse exercício programa (EP)
@@ -63,8 +63,12 @@ def crie (nlins, ncols, vini = 0):
     do elemento em cada posição é `vini`.
     '''
     # Substitua o código abaixo com a sua solução
-    print("Vixe! ainda não fiz a função crie :-(")
-    return []
+    resultado = []
+    for _ in range(nlins):
+        nova_linha = [vini] * ncols
+        resultado.append(nova_linha)
+
+    return resultado
 
 #------------------------------------------------------------------
 #
@@ -74,10 +78,14 @@ def clone ( matriz ):
     RECEBE uma matriz `matriz`.
     RETORNA um clone da matriz.
     '''
-    # Substitua o código abaixo com a sua solução
-    print("Vixe! ainda não fiz a função clone :-(")
-    return []
+    resultado = []
+    for lin in range(len(matriz)):
+        nova_linha = []
+        for col in range(len(matriz[0])):
+            nova_linha.append(matriz[lin][col])
+        resultado.append(nova_linha)
 
+    return resultado
 #------------------------------------------------------------------
 #
 def subtraia ( matriz1, matriz2 ):
@@ -87,10 +95,14 @@ def subtraia ( matriz1, matriz2 ):
     de números inteiros.  
     RETORNA a matriz resultante da subtração de `matriz1` por `matriz2`.
     '''
-    # Substitua o código abaixo com a sua solução
-    print("Vixe! ainda não fiz a função subtraia :-(")
-    return []
-    
+    resultado = []
+    for lin in range(len(matriz1)):
+        nova_linha = []
+        for col in range(len(matriz1[0])):
+            nova_linha.append(matriz1[lin][col] - matriz2[lin][col])
+        resultado.append(nova_linha)
+    return resultado
+
 #------------------------------------------------------------------
 #
 def to_string ( matriz , nome = 'matriz'):
