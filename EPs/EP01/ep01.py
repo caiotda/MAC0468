@@ -139,6 +139,26 @@ def subtraia ( matriz1, matriz2 ):
     return resultado
 
 #------------------------------------------------------------------
+def prepara (item):
+    ''' (numero) -> str 
+    
+    RECEBE um numero
+    RETORNA uma string com 4 caracteres.
+
+
+    - O número recebido deve ter no máximo 4 caracteres.
+
+    - Se o número possuir menos do que 4 caracteres, a diferença 
+    em caracteres é preenchida com espaços em branco. 
+    - Do contrário, retorna uma string com 4 espaços
+    '''
+    resultado = str(item)
+    diferença = 4 - len(resultado)
+    if(diferença >= 0):
+        return resultado + diferença*' '
+    return '    '
+
+#------------------------------------------------------------------
 #
 def to_string ( matriz , nome = 'matriz'):
     ''' (matriz, str) -> str
@@ -160,8 +180,16 @@ def to_string ( matriz , nome = 'matriz'):
     coluna estarão alinhados.
     '''
     # Substitua o código abaixo com a sua solução
-    print("Vixe! Ainda não fiz a função to_string :-(")
-    return ''
+    resultado = nome + '\n'
+    for linha in matriz:
+        nova_linha = ''
+        for item in linha:
+            substring = prepara(item)
+            nova_linha += substring + ' '
+        nova_linha = nova_linha + '\n'
+        resultado += nova_linha
+    resultado = resultado.rstrip('\n')
+    return resultado
 
 #------------------------------------------------------------------
 #
