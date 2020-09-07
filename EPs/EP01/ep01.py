@@ -49,12 +49,47 @@ def main():
     '''
     ## Coloque aqui os seus testes.
 
+
+    ## Testes da função subtraia:
+    matriz1 = [[1,2,3], [4,5,6], [7,8,9]]
+    matriz2 = [[1,2,3], [4,5,6], [7,8,9]]
+    resultado_esperado = [[0,0,0], [0,0,0], [0,0,0]]
+    resultado = subtraia(matriz1, matriz2)
+    veredito = igualdade(resultado, resultado_esperado)
+    if(veredito == False):
+        print("Teste falhou!")
+    else:
+        print("Passou!")
+    matriz2 = [[3,2,1], [6,5,4], [9,8,7]]
+    resultado = subtraia(matriz1, matriz2)
+    resultado_esperado = [[-2,0,2], [-2,0,2], [-2,0,2]]
+    veredito = igualdade(resultado, resultado_esperado)
+    if(veredito == False):
+        print("Teste falhou!")
+    else:
+        print("Passou!")
     mat = [ [1] ]
     print( to_string(mat, 'Olá Mundo!!') )
 
 
 #------------------------------------------------------------------
 #
+
+def igualdade( matriz1, matriz2 ):
+    ''' (list, list) -> bool
+    
+    RECEBE duas matrizes `matriz1` e `matriz2`
+    RETORNA True se todos matriz1[i][j] = matriz2[i][j], para todo i
+    e j validos.
+    '''
+
+    for i in range(len(matriz1)):
+        for j in range(len(matriz1[0])):
+            if(matriz1[i][j] != matriz2[i][j]):
+                return False
+    return True
+
+#------------------------------------------------------------------
 def crie (nlins, ncols, vini = 0):
     ''' (int, int, int) -> list
 
