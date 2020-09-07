@@ -178,8 +178,13 @@ def limiarize ( matriz, limite, alto=255, baixo=0 ):
     deve receber o valor `alto`. 
     As demais posições devem receber o valor `baixo`.
     '''
-    # Substitua o código abaixo com a sua solução
-    print("Vixe! Ainda não fiz a função limiarize :-(")
+    for lin in range(len(matriz)):
+        for col in range(len(matriz[0])):
+            item = matriz[lin][col]
+            if(item > limite):
+                matriz[lin][col] = alto
+            else:
+                matriz[lin][col] = baixo
 
 #######################################################
 ###                 FIM                             ###
