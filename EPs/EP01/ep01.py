@@ -49,47 +49,84 @@ def main():
     '''
     ## Coloque aqui os seus testes.
 
-
+    matriz1=[[1,2,3], [4,5,6], [7,8,9]]
+    matriz2=[[1,1,1], [1,1,1], [1,1,1]]
+    matriz3=[[0,0,0], [0,0,0], [0,0,0]]
+    matriz4=[[2,2,2], [2,2,2], [2,2,2]]
     ## Testes da função subtraia:
-    matriz1 = [[1,2,3], [4,5,6], [7,8,9]]
-    matriz2 = [[1,2,3], [4,5,6], [7,8,9]]
-    resultado_esperado = [[0,0,0], [0,0,0], [0,0,0]]
-    resultado = subtraia(matriz1, matriz2)
-    veredito = igualdade(resultado, resultado_esperado)
-    if(veredito == False):
-        print("Teste falhou!")
-    else:
-        print("Passou!")
-    matriz2 = [[3,2,1], [6,5,4], [9,8,7]]
-    resultado = subtraia(matriz1, matriz2)
-    resultado_esperado = [[-2,0,2], [-2,0,2], [-2,0,2]]
-    veredito = igualdade(resultado, resultado_esperado)
-    if(veredito == False):
-        print("Teste falhou!")
-    else:
-        print("Passou!")
-    mat = [ [1] ]
-    print( to_string(mat, 'Olá Mundo!!') )
+
+    testes_subtraia = [
+        (matriz1, matriz2, [[0,1,2], [3,4,5], [6,7,8]]),
+        (matriz2, matriz1, [[0, -1, -2], [-3, -4, -5], [-6, -7, -8]]),
+        (matriz1, matriz3, matriz1)
+    ]
+    sucessos = 0
+    for teste in testes_subtraia:
+        m1, m2, esperado = teste
+        resultado = subtraia(m1, m2)
+        if (resultado != esperado):
+            print('Falhou')
+        else:
+            sucessos += 1
+    print("Bateria de testes da função subtrai concluida. {}/{} testes passaram".format(sucessos, len(testes_subtraia)))
+
+    ## Testes da função crie
+    testes_crie = [
+        (3, 3, 2, matriz4),
+        (3, 3, 0, matriz3),
+        (1, 1, 1, [ [1] ]),
+    ]
+    
+    sucessos = 0
+    for teste in testes_crie:
+        nlin, ncol, vini, esperado = teste
+        resultado = crie(nlin, ncol, vini)
+        if (resultado != esperado):
+            print('Falhou')
+        else:
+            sucessos += 1
+
+    print("Bateria de testes da função cria concluida. {}/{} testes passaram".format(sucessos, len(testes_crie)))
+
+    ## Testes da função clone
+    testes_clone = [
+        (matriz1, matriz1),
+        (matriz2, matriz2),
+        (matriz3, matriz3),
+    ]
+    sucesso = 0
+    for teste in testes_clone:
+        clonado, esperado = teste
+        resultado = clone(clonado)
+        if (resultado != esperado):
+            print('Falhou')
+        else:
+            sucesso += 1
+    print("Bateria de testes da função clone concluida. {}/{} testes passaram".format(sucessos, len(testes_clone)))
+
+    teste_matriz1 = clone(matriz1)
+    teste_matriz2 = clone(matriz2)
+    teste_matriz4 = clone(matriz4)
+    # Testes da função limiariza
+    testes_limiariza = [
+        (teste_matriz1, 5, [[0,0,0], [0,0, 255], [255,255,255]]),
+        (teste_matriz2, 0, [[255,255,255], [255,255, 255], [255,255,255]]),
+        (teste_matriz4, 4, [[0,0,0], [0,0,0], [0,0,0]]),
+    ]
+    sucesso = 0
+    for teste in testes_limiariza:
+        alvo, limiar, esperado = teste
+        limiarize(alvo, limiar)
+        if (alvo != esperado):
+            print('Falhou')
+        else:
+            sucesso += 1
+    print("Bateria de testes da função limiarize concluida. {}/{} testes passaram".format(sucesso, len(testes_limiariza)))
 
 
 #------------------------------------------------------------------
 #
 
-def igualdade( matriz1, matriz2 ):
-    ''' (list, list) -> bool
-    
-    RECEBE duas matrizes `matriz1` e `matriz2`
-    RETORNA True se todos matriz1[i][j] = matriz2[i][j], para todo i
-    e j validos.
-    '''
-
-    for i in range(len(matriz1)):
-        for j in range(len(matriz1[0])):
-            if(matriz1[i][j] != matriz2[i][j]):
-                return False
-    return True
-
-#------------------------------------------------------------------
 def crie (nlins, ncols, vini = 0):
     ''' (int, int, int) -> list
 
