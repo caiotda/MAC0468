@@ -104,10 +104,10 @@ def main():
             sucesso += 1
     print("Bateria de testes da função clone concluida. {}/{} testes passaram".format(sucessos, len(testes_clone)))
 
+    # Testes da função limiariza
     teste_matriz1 = clone(matriz1)
     teste_matriz2 = clone(matriz2)
     teste_matriz4 = clone(matriz4)
-    # Testes da função limiariza
     testes_limiariza = [
         (teste_matriz1, 5, [[0,0,0], [0,0, 255], [255,255,255]]),
         (teste_matriz2, 0, [[255,255,255], [255,255, 255], [255,255,255]]),
@@ -122,6 +122,31 @@ def main():
         else:
             sucesso += 1
     print("Bateria de testes da função limiarize concluida. {}/{} testes passaram".format(sucesso, len(testes_limiariza)))
+
+    # Testes da função to_string
+    matriz1 = [[1, 2, 3, 4, 5], [3, 4, 5, 6, 7], [2, 4, 6, 8, 1], [5, 3, 1, 7, 9], [9, 6, 3, 1, 7]]
+
+    testes_tostring = [
+        (matriz1, 'minha matriz!', 'minha matriz!\n\
+   1    2    3    4    5 \n\
+   3    4    5    6    7 \n\
+   2    4    6    8    1 \n\
+   5    3    1    7    9 \n\
+   9    6    3    1    7 \
+')
+    ]
+    sucesso = 0
+    for teste in testes_tostring:
+        matriz, texto, esperado = teste
+        resultado = to_string(matriz, texto)
+        print(esperado)
+        print(resultado)
+        if (resultado != esperado):
+            print('Falhou')
+        else:
+            sucesso += 1
+
+    print("Bateria de testes da função to_string concluida. {}/{} testes passaram".format(sucesso, len(testes_tostring)))
 
 
 #------------------------------------------------------------------
@@ -192,7 +217,7 @@ def prepara (item):
     resultado = str(item)
     diferença = 4 - len(resultado)
     if(diferença >= 0):
-        return resultado + diferença*' '
+        return diferença*' ' + resultado
     return '    '
 
 #------------------------------------------------------------------
