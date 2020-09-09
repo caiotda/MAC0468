@@ -48,6 +48,23 @@ def main():
         Modifique essa função, escrevendo os seus testes.
     '''
     ## Coloque aqui os seus testes.
+    DEBUG = False
+    # Modifique essa linha para rodar os testes
+    if(DEBUG):
+        teste()
+
+
+
+#------------------------------------------------------------------
+#
+
+def teste():
+    '''(None) -> None
+    Função responsável por rodar os testes do EP. Cada teste é representado por um vetor,
+    onde cada item do vetor é uma entrada a ser testada.
+
+    Cada entrada é constituida pelos parâmetros de entrada da função e o valor esperado no teste.
+    '''
 
     matriz1=[[1,2,3], [4,5,6], [7,8,9]]
     matriz2=[[1,1,1], [1,1,1], [1,1,1]]
@@ -139,18 +156,12 @@ def main():
     for teste in testes_tostring:
         matriz, texto, esperado = teste
         resultado = to_string(matriz, texto)
-        print(esperado)
-        print(resultado)
         if (resultado != esperado):
             print('Falhou')
         else:
             sucesso += 1
 
     print("Bateria de testes da função to_string concluida. {}/{} testes passaram".format(sucesso, len(testes_tostring)))
-
-
-#------------------------------------------------------------------
-#
 
 def crie (nlins, ncols, vini = 0):
     ''' (int, int, int) -> list
