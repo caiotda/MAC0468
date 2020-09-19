@@ -210,9 +210,10 @@ def segmentacao_SME( img, viz = 3 ):
     RETORNA a imagem resultado da subtração entre `img` e sua erosão. 
     Veja exemplos no enunciado.
     '''
-    print("Vixe! Ainda não fiz a função segmentacao_SME()...")
-    return ep01.crie(1,1)
-
+    img_original = ep01.clone(img)
+    img_erodida = ep01.clone(img)
+    erosao(img_erodida, viz)
+    return ep01.subtraia(img_original, img_erodida)
 #------------------------------------------------------------------
 #
 def dilatacao ( img, viz = 3 ):
@@ -243,8 +244,10 @@ def segmentacao_SDM( img, viz = 3 ):
     RETORNA a imagem resultado da subtração entre a dilatação e img. 
     Veja exemplos no enunciado.
     '''
-    print("Essa função é opcional.")
-    return ep01.crie(1,1)
+    img_original = ep01.clone(img)
+    img_dilatada = ep01.clone(img)
+    dilatacao(img_dilatada, viz)
+    return ep01.subtraia(img_dilatada, img_original)
 
 #######################################################
 ###                 FIM                             ###
