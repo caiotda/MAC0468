@@ -91,7 +91,7 @@ def main():
         lin, col, viz = params
         result = pega_vizinhanca(matriz, lin, col, viz)
         if result != expected:
-            print("Teste da matriz {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), expected, result))
+            print("Teste da matriz {} com params {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), params, expected, result))
         else:
             sucesso += 1
     sucesso = 0
@@ -161,6 +161,25 @@ def pega_minimo_vizinhanca(img, lin, col, viz):
         if img[sub_lin][sub_col] < min_bit:
             min_bit = img[sub_lin][sub_col]
     return min_bit
+
+#------------------------------------------------------------------
+#
+
+def pega_maximo_vizinhanca(img, lin, col, viz):
+    ''' (matriz, int, int) -> int
+
+    RECEBE uma matriz img representando uma imagem em níveis de cinza
+    e inteiros lin e col, representando as coordenadas em questão da
+    imagem e viz, representando o tamanho da vizinhança da imagem.
+
+    DEVOLVE o pixel da imagem dentro da vizinhança de tamanho viz centrada
+    em lin, col com maior valor (isto é, com o maior tom de cinza).
+    '''
+    max_bit = img[lin][col]
+    for sub_lin, sub_col in pega_vizinhanca(img, lin, col, viz): 
+        if img[sub_lin][sub_col] > max_bit:
+            max_bit = img[sub_lin][sub_col]
+    return max_bit
 #------------------------------------------------------------------
 #
 def erosao ( img, viz = 3 ):
@@ -178,7 +197,6 @@ def erosao ( img, viz = 3 ):
     '''
     for lin in range(len(img)):
         for col in range(len(img[0])):
-            # iterar a sub matriz de tamanho viz
             img[lin][col] = pega_minimo_vizinhanca(img, lin, col, viz)
             
                     
@@ -211,7 +229,9 @@ def dilatacao ( img, viz = 3 ):
     Você pode assumir que viz será sempre um número ímpar, que define
     um quadrado centrado em um ponto (lin,col) de lado tam.
     '''
-    print("Essa função é opcional.")
+    for lin in range(len(img)):
+        for col in range(len(img[0])):
+            img[lin][col] = pega_maximo_vizinhanca(img, lin, col, viz)
 
 
 #------------------------------------------------------------------
