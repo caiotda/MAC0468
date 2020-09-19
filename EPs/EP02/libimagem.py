@@ -75,7 +75,27 @@ def main():
 
     ##
     ## coloque aqui os seus outros testes
-    ## 
+    ##
+
+    ## Testes do 'pega_vizinhanca'
+
+    matriz1 = [[1,2,3], [4,5,6], [7,8,9]]
+    testes = [
+        (matriz1, (0, 0, 3), set([(1,0), (1,1), (0,1)])),
+        (matriz1, (0, 2, 3), set([(0,1), (1,1), (1,2)])),
+        (matriz1, (1, 1, 3), set([(0,0), (0,1), (0,2), (1,0), (1,2), (2,0), (2,1), (2,2)])),
+    ]
+    
+    sucesso = 0
+    for matriz, params, expected in testes:
+        lin, col, viz = params
+        result = pega_vizinhanca(matriz, lin, col, viz)
+        if result != expected:
+            print("Teste da matriz {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), expected, result))
+        else:
+            sucesso += 1
+
+    print("{}/{} testes passaram.".format(sucesso, len(testes)))
 
 #------------------------------------------------------------------
 #
@@ -93,18 +113,19 @@ def pega_vizinhanca(img, lin, col, viz):
     '''
 
     min_x = max(lin - viz//2, 0)
-    max_x = min(len(img), lin + viz//2)
+    max_x = min(len(img) - 1, lin + viz//2)
 
     min_y = max(col - viz//2, 0)
     max_y = min(len(img) - 1, col + viz//2)
 
     pixels = []
-    for lin in range(min_y, max_y + 1):
+    for i in range(min_x, max_x + 1):
         # Escolhe linhas no intervalo fechado [min_y, max_y]
-        for col in range(min_x, max_x + 1): 
+        for j in range(min_y, max_y + 1): 
             # Escolhe colunas no intervalo fechado [min_x, max_x]
-            pixels.append((lin, col))
-    return list(pixels)
+            if img[lin][col] != img[i][j]:
+                pixels.append((i, j))
+    return set(pixels)
 
 #------------------------------------------------------------------
 #
