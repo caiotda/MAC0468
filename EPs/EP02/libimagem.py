@@ -94,6 +94,22 @@ def main():
             print("Teste da matriz {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), expected, result))
         else:
             sucesso += 1
+    sucesso = 0
+
+    testes = [
+        (matriz1, (0, 0, 3), 1),
+        (matriz1, (1, 1, 3), 1),
+        (matriz1, (2, 2, 3), 5),
+    ]
+
+
+    for matriz, params, expected in testes:
+        lin, col, viz = params
+        result = pega_minimo_vizinhanca(matriz, lin, col, viz)
+        if result != expected:
+            print("Teste da matriz {} com params {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), params, expected, result))
+        else:
+            sucesso += 1
 
     print("{}/{} testes passaram.".format(sucesso, len(testes)))
 
