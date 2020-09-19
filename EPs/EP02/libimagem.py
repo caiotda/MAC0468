@@ -6,8 +6,8 @@
 #------------------------------------------------------------------
      
 '''
-    Nome:
-    NUSP:
+    Nome: Caio Túlio de Deus Andrade
+    NUSP: 9797232
 
     Ao preencher esse cabeçalho com o meu nome e o meu número USP,
     declaro que todas as partes originais desse exercício programa (EP)
@@ -79,6 +79,53 @@ def main():
 
 #------------------------------------------------------------------
 #
+
+def pega_vizinhanca(img, lin, col, viz):
+    '''(matriz, int, int, int) -> lista de int
+    
+    RECEBE uma matriz img representando uma imagem em níveis de
+    cinza e inteiros lin, col e viz, representando vizinhança
+    de tamanho viz centrada nas coordenadas img[lin][col]
+
+    DEVOLVE uma lista de pares (linha, coluna) contendo os pixels
+    da imagem que estão na vizinhança de tamanho viz centrado em
+    lin, col. 
+    '''
+
+    min_x = max(lin - viz//2, 0)
+    max_x = min(len(img), lin + viz//2)
+
+    min_y = max(col - viz//2, 0)
+    max_y = min(len(img) - 1, col + viz//2)
+
+    pixels = []
+    for lin in range(min_y, max_y + 1):
+        # Escolhe linhas no intervalo fechado [min_y, max_y]
+        for col in range(min_x, max_x + 1): 
+            # Escolhe colunas no intervalo fechado [min_x, max_x]
+            pixels.append((lin, col))
+    return list(pixels)
+
+#------------------------------------------------------------------
+#
+
+def pega_minimo_vizinhanca(img, lin, col, viz):
+    ''' (matriz, int, int) -> int
+
+    RECEBE uma matriz img representando uma imagem em níveis de cinza
+    e inteiros lin e col, representando as coordenadas em questão da
+    imagem e viz, representando o tamanho da vizinhança da imagem.
+
+    DEVOLVE o pixel da imagem dentro da vizinhança de tamanho viz centrada
+    em lin, col com menor valor (isto é, com o menor tom de cinza).
+    '''
+    min_bit = img[lin][col]
+    for sub_lin, sub_col in pega_vizinhanca(img, lin, col, viz): 
+        if img[sub_lin][sub_col] < min_bit:
+            min_bit = img[sub_lin][sub_col]
+    return min_bit
+#------------------------------------------------------------------
+#
 def erosao ( img, viz = 3 ):
     ''' (matriz, int) -> None
 
@@ -92,8 +139,12 @@ def erosao ( img, viz = 3 ):
     Pré-condição: a função supõe que `viz` é um número ímpar 
     positivo.
     '''
-    print("Vixe! Ainda não fiz a função erosao()...")
-
+    for lin in range(len(img)):
+        for col in range(len(img[0])):
+            # iterar a sub matriz de tamanho viz
+            img[lin][col] = pega_minimo_vizinhanca(img, lin, col, viz)
+            
+                    
 #------------------------------------------------------------------
 #
 def segmentacao_SME( img, viz = 3 ):
