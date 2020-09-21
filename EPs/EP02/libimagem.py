@@ -83,11 +83,13 @@ def main():
     matriz2 = [[9, 4, 5, 0, 8], [10, 3, 2, 1, 7], [9, 1, 6, 3, 15], [0, 3, 8, 10, 1], [1, 16, 9, 12, 7]]
     testes = [
         (matriz1, (0, 0, 3), set([(1,0), (1,1), (0,1)])),
+        (matriz1, (0, 0, 5), set([(0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)])),
         (matriz1, (0, 2, 3), set([(0,1), (1,1), (1,2)])),
         (matriz1, (1, 1, 3), set([(0,0), (0,1), (0,2), (1,0), (1,2), (2,0), (2,1), (2,2)])),
     ]
     
     sucesso = 0
+    total = 0
     for matriz, params, expected in testes:
         lin, col, viz = params
         result = pega_vizinhanca(matriz, lin, col, viz)
@@ -95,9 +97,8 @@ def main():
             print("Teste da matriz {} com params {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), params, expected, result))
         else:
             sucesso += 1
-    sucesso = 0
-
-    # Testes do pega_minimo_vizinhança
+        total += 1
+ # Testes do pega_minimo_vizinhança
     testes = [
         (matriz1, (0, 0, 3), 1),
         (matriz1, (1, 1, 3), 1),
@@ -112,20 +113,26 @@ def main():
             print("Teste da matriz {} com params {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), params, expected, result))
         else:
             sucesso += 1
-
+        total += 1
     # Testes do erosao
 
-    sucesso = 0
-    testes = [(matriz2, 3, [[3, 2, 0, 0, 0], [1, 1, 0, 0, 0], [0,0,1,1,1], [0,0,1,1,1], [0,0,3,1,1]])]
+    testes = [
+        (matriz2, 3, [[3, 2, 0, 0, 0], [1, 1, 0, 0, 0], [0,0,1,1,1], [0,0,1,1,1], [0,0,3,1,1]]),
+        ([[0, 0, 0], [0,0,0], [0,0,0]], 3, [[0, 0, 0], [0,0,0], [0,0,0]]),
+        ([], 1, []),
+        (matriz1, 1, matriz1),
+    ]
     for matriz, viz, expected in testes:
         result = ep01.clone(matriz)
-        erosao(result)
+        erosao(result, viz)
         if expected != result:
             print("Teste da matriz {} com viznhança {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), viz, ep01.to_string(expected), ep01.to_string(result)))
         else:
             sucesso += 1
 
-    print("{}/{} testes passaram.".format(sucesso, len(testes)))
+        total += 1
+
+    print("{}/{} testes passaram.".format(sucesso, total))
 
 #------------------------------------------------------------------
 #
@@ -146,13 +153,13 @@ def pega_vizinhanca(img, lin, col, viz):
     max_x = min(len(img) - 1, lin + viz//2)
 
     min_y = max(col - viz//2, 0)
-    max_y = min(len(img) - 1, col + viz//2)
+    max_y = min(len(img[0]) - 1, col + viz//2)
 
     pixels = []
     for i in range(min_x, max_x + 1):
-        # Escolhe linhas no intervalo fechado [min_y, max_y]
+        # Escolhe linhas no intervalo fechado [min_x, max_x]
         for j in range(min_y, max_y + 1): 
-            # Escolhe colunas no intervalo fechado [min_x, max_x]
+            # Escolhe colunas no intervalo fechado [min_y, max_y]
             if img[lin][col] != img[i][j]:
                 pixels.append((i, j))
     return set(pixels)
@@ -171,7 +178,7 @@ def pega_minimo_vizinhanca(img, lin, col, viz):
     em lin, col com menor valor (isto é, com o menor tom de cinza).
     '''
     min_bit = img[lin][col]
-    for sub_lin, sub_col in pega_vizinhanca(img, lin, col, viz): 
+    for sub_lin, sub_col in pega_vizinhanca(img, lin, col, viz):
         if img[sub_lin][sub_col] < min_bit:
             min_bit = img[sub_lin][sub_col]
     return min_bit
