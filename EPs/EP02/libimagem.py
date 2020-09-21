@@ -80,6 +80,7 @@ def main():
     ## Testes do 'pega_vizinhanca'
 
     matriz1 = [[1,2,3], [4,5,6], [7,8,9]]
+    matriz2 = [[9, 4, 5, 0, 8], [10, 3, 2, 1, 7], [9, 1, 6, 3, 15], [0, 3, 8, 10, 1], [1, 16, 9, 12, 7]]
     testes = [
         (matriz1, (0, 0, 3), set([(1,0), (1,1), (0,1)])),
         (matriz1, (0, 2, 3), set([(0,1), (1,1), (1,2)])),
@@ -96,6 +97,7 @@ def main():
             sucesso += 1
     sucesso = 0
 
+    # Testes do pega_minimo_vizinhança
     testes = [
         (matriz1, (0, 0, 3), 1),
         (matriz1, (1, 1, 3), 1),
@@ -108,6 +110,18 @@ def main():
         result = pega_minimo_vizinhanca(matriz, lin, col, viz)
         if result != expected:
             print("Teste da matriz {} com params {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), params, expected, result))
+        else:
+            sucesso += 1
+
+    # Testes do erosao
+
+    sucesso = 0
+    testes = [(matriz2, 3, [[3, 2, 0, 0, 0], [1, 1, 0, 0, 0], [0,0,1,1,1], [0,0,1,1,1], [0,0,3,1,1]])]
+    for matriz, viz, expected in testes:
+        result = ep01.clone(matriz)
+        erosao(result)
+        if expected != result:
+            print("Teste da matriz {} com viznhança {} falhou! Esperamos {} e obtemos {}".format(ep01.to_string(matriz), viz, ep01.to_string(expected), ep01.to_string(result)))
         else:
             sucesso += 1
 
@@ -195,9 +209,10 @@ def erosao ( img, viz = 3 ):
     Pré-condição: a função supõe que `viz` é um número ímpar 
     positivo.
     '''
+    matriz_referencia = ep01.clone(img)
     for lin in range(len(img)):
         for col in range(len(img[0])):
-            img[lin][col] = pega_minimo_vizinhanca(img, lin, col, viz)
+            img[lin][col] = pega_minimo_vizinhanca(matriz_referencia, lin, col, viz)
             
                     
 #------------------------------------------------------------------
