@@ -81,13 +81,6 @@ class Pymagem:
                 s += '%4d '%self.matriz[i][j]
             s += '\n'
         return s
-    
-    def size(self):
-        """ (None) -> int
-        RETORNA uma tupla contendo o par(nlins, ncols), respectivamente o número 
-        de linhas e colunas da imagem.
-        """
-        return (self.nlins, self.ncols)
 
     def __getitem__(self, index):
         """ (lista) -> number
@@ -118,6 +111,13 @@ class Pymagem:
         for i in self.nlins:
             for j in self.ncols:
                 self.matriz = self.matriz[i][j] - other.matriz[i][j]
+
+    def size(self):
+        """ (None) -> int
+        RETORNA uma tupla contendo o par(nlins, ncols), respectivamente o número 
+        de linhas e colunas da imagem.
+        """
+        return (self.nlins, self.ncols)
 
 
     def limiarize(self, limite, alto, baixo):
