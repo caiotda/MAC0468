@@ -1,4 +1,4 @@
-from pymagem import Pymagem
+from Pymagem import Pymagem
 
 def main():
     ''' (None) -> None
@@ -58,7 +58,7 @@ def main():
     print(img1.crop().matriz)
 
     print("Testando segmentação SME"):
-    
+
 
 if __name__ == '__main__':
     main()

@@ -93,18 +93,18 @@ class Pymagem:
         return self.matriz[lin][col]
 
     def __setitem__(self, index, valor):
-        """ (lista, number) -> None
-        RECEBE uma lista contendo uma coordenada da imagem e um número.
-        MODIFICA a matriz associada a imagem, alterando o valor do pixel
+        """ (lista, value) -> None
+        RECEBE uma lista contendo uma coordenada da imagem e um valor.
+        MODIFICA a imagem, alterando o valor do pixel
         associado à coordenada, alterando seu valor para `valor`.
         """
         lin, col = index
         self.matriz[lin][col] = valor
 
     def __sub__(self, other):
-        """(pymagem) -> Pymagem
-        RECEBE um objeto da classe pymagem e 
-        RETORNA um objeto da classe pymagem contendo o resultado da
+        """(Pymagem) -> Pymagem
+        RECEBE um objeto da classe Pymagem e 
+        RETORNA um objeto da classe Pymagem contendo o resultado da
         subtração das imagens self e other.
 
         Implementa a operação de subtração entre dois objetos.
@@ -124,10 +124,11 @@ class Pymagem:
         return (self.nlins, self.ncols)
 
     def crop(self, top_lin=0, top_col=0, bottom_lin=None, bottom_col=None):
-        """ (int, int, int, int) -> pymagem
-        RECEBE inteiros bottom_lin, bottom_col, top_lin e top_col (opcionais).
+        """ (int, int, int, int) -> Pymagem
+        RECEBE inteiros bottom_lin, bottom_col, top_lin e top_col
+        (todos opcionais).
 
-        DEVOLVE um objeto pymagem que representa uma região da pymagem `self`: 
+        DEVOLVE um objeto Pymagem que representa uma região da Pymagem `self`: 
         pega todos elementos self.matriz[i][j], onde i e j satisfazem 
         top_lin <=i < bottom_lin e top_col <= j < bottom_col
 
@@ -150,8 +151,8 @@ class Pymagem:
 
     def limiarize(self, limite, alto, baixo):
         """ (int, int, int) -> None
-        RECEBE inteiros limite, alto, baixo e MODIFICA 
-        o objeto Pymagem de forma que toda posição da imagem
+        RECEBE inteiros limite, alto, baixo e 
+        MODIFICA  o objeto Pymagem de forma que todo pixel da imagem
         com valor acima de limite deve receber o valor `alto`; 
         Do contrário, recebe o valor `baixo`.
         """
@@ -164,8 +165,9 @@ class Pymagem:
 
     def erosao(self, viz):
         """(int) -> None
-        RECEBE um inteiro viz e MODIFICA a imagem, aplicando um filtro de erosão
-        com vizinhaça de tamanho viz.
+        RECEBE um inteiro viz e 
+        MODIFICA a imagem, aplicando um filtro de erosão com vizinhaça de
+        tamanho viz.
         """
         clone = self.crop()
         for i in range(self.nlins):
@@ -174,10 +176,9 @@ class Pymagem:
     
     def segmentacao_SME(self, viz):
         """ (int) -> Pymagem
-        RECEBE um inteiro viz e MODIFICA a imagem, aplicando uma segmentação SME
-        com vizinhança de tamanho viz.
-
-        DEVOLVE a matriz self subtraida da matriz self com um filtro de erosão aplicado
+        RECEBE um inteiro viz e 
+        DEVOLVE a matriz self subtraida da matriz self com um filtro de erosão
+        aplicado.
         """
         matriz_erodida = self.crop()
         matriz_erodida.erosao(viz)
@@ -188,8 +189,8 @@ class Pymagem:
         RECEBE inteiros lin, col e viz, representando uma vizinhança de tamanho
         viz e centrada nas coordenadas (lin,col).
 
-        DEVOLVE o valor do pixel de menor valor na vizinhança centrada em (lin, col) com
-        vizinhança de tamanho viz.
+        DEVOLVE o valor do pixel de menor valor na vizinhança centrada em
+        (lin, col) com vizinhança de tamanho viz.
         """
         min_bit = self.matriz[lin][col]
         for i, j in self.__pega_vizinhança(lin, col, viz):
@@ -198,7 +199,7 @@ class Pymagem:
         return min_bit
 
     def __pega_vizinhança(self, lin, col, viz):
-        """ (int, int, int)-> Set
+        """ (int, int, int)-> set
         RECEBE inteiros lin, col e viz, representando uma vizinhança de tamanho
         viz e centrada nas coordenadas (lin,col).
 
