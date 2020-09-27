@@ -110,7 +110,7 @@ class Pymagem:
         """
         for i in self.nlins:
             for j in self.ncols:
-                self.matriz = self.matriz[i][j] - other.matriz[i][j]
+                self[i][j] = self.matriz[i][j] - other.matriz[i][j]
 
     def size(self):
         """ (None) -> int
@@ -118,6 +118,29 @@ class Pymagem:
         de linhas e colunas da imagem.
         """
         return (self.nlins, self.ncols)
+
+    def crop(self, bottom_lin, bottom_col, top_lin=0, top_col=0):
+        """ (int, int, int, int) -> pymagem
+        RECEBE inteiros bottom_lin, bottom_col, top_lin e top_col (opcionais).
+
+        DEVOLVE um objeto pymagem que representa uma região da pymagem `self`: 
+        pega todos elementos self.matriz[i][j], onde i e j satisfazem 
+        top_lin <=i < bottom_lin e top_col <= j < bottom_col
+
+        Se nenhum parâmetro é passado, devolve um clone de self.
+
+        """
+        if bottom_lin is None and bottom_col is None:
+            bottom_col = len(self.matriz[0])
+            bottom_lin = len(self.matriz)      
+        nlins = bottom_lin - top_lin
+        ncols = bottom_col - top_col
+        crop = Pymagem(nlins, ncols)
+        for i in range(top_lin, bottom_lin):
+            for j in range(top_col, bottom_col):
+                crop[i][j] = self[i][j]
+
+        return crop
 
 
     def limiarize(self, limite, alto, baixo):
@@ -142,7 +165,7 @@ class Pymagem:
         clone = self.__clone()
         for i in self.nlins:
             for j in self.ncols:
-                self.matriz[i][j] = self.__pega_minimo_vizinhança(i, j, viz)
+                clone[i][j] = self.__pega_minimo_vizinhança(i, j, viz)
     
     def segmentacao_SME(self, viz):
         """ (int) -> None
