@@ -67,9 +67,11 @@ class Pymagem:
         self.nlins = nlins
         self.ncols = ncols
         self.matriz = []
-        for i in self.nlins:
-            for j in self.ncols:
-                self.matriz[i][j] = valor
+        for _ in range(self.nlins):
+            linha = []
+            for _ in range(self.ncols):
+                linha.append(valor)
+            self.matriz.append(linha)
 
     def __repr__(self):
         """(None) -> string
@@ -99,18 +101,20 @@ class Pymagem:
         lin, col = index
         self.matriz[lin][col] = valor
 
-    def __isub__(self, other):
-        """(pymagem) -> None
+    def __sub__(self, other):
+        """(pymagem) -> Pymagem
         RECEBE um objeto da classe pymagem e 
-        MODIFICA o objeto da classe pymagem referenciado por self, fazendo
-        a subtração das matrizes associadas a cada objeto.
+        RETORNA um objeto da classe pymagem contendo o resultado da
+        subtração das imagens self e other.
 
         Implementa a operação de subtração entre dois objetos.
 
         """
-        for i in self.nlins:
-            for j in self.ncols:
-                self[i][j] = self.matriz[i][j] - other.matriz[i][j]
+        resultado = Pymagem(self.nlins, self.ncols)
+        for i in range(self.nlins):
+            for j in range(self.ncols):
+                resultado.matriz[i][j] = self.matriz[i][j] - other.matriz[i][j]
+        return resultado
 
     def size(self):
         """ (None) -> int
@@ -119,7 +123,7 @@ class Pymagem:
         """
         return (self.nlins, self.ncols)
 
-    def crop(self, bottom_lin, bottom_col, top_lin=0, top_col=0):
+    def crop(self, top_lin=0, top_col=0, bottom_lin=None, bottom_col=None):
         """ (int, int, int, int) -> pymagem
         RECEBE inteiros bottom_lin, bottom_col, top_lin e top_col (opcionais).
 
@@ -130,17 +134,18 @@ class Pymagem:
         Se nenhum parâmetro é passado, devolve um clone de self.
 
         """
-        if bottom_lin is None and bottom_col is None:
+        if bottom_lin is None:
+            bottom_lin = len(self.matriz) 
+        if bottom_col is None:
             bottom_col = len(self.matriz[0])
-            bottom_lin = len(self.matriz)      
+
         nlins = bottom_lin - top_lin
         ncols = bottom_col - top_col
-        crop = Pymagem(nlins, ncols)
+        imagem_com_crop = Pymagem(nlins, ncols)
         for i in range(top_lin, bottom_lin):
             for j in range(top_col, bottom_col):
-                crop[i][j] = self[i][j]
-
-        return crop
+                imagem_com_crop.matriz[i-top_lin][j-top_col] = self.matriz[i][j]
+        return imagem_com_crop
 
 
     def limiarize(self, limite, alto, baixo):
@@ -150,8 +155,8 @@ class Pymagem:
         com valor acima de limite deve receber o valor `alto`; 
         Do contrário, recebe o valor `baixo`.
         """
-        for i in self.nlins:
-            for j in self.ncols:
+        for i in range(self.nlins):
+            for j in range(self.ncols):
                 if self.matriz[i][j] > limite:
                     self.matriz[i][j] = alto
                 else:
@@ -162,18 +167,21 @@ class Pymagem:
         RECEBE um inteiro viz e MODIFICA a imagem, aplicando um filtro de erosão
         com vizinhaça de tamanho viz.
         """
-        clone = self.__clone()
-        for i in self.nlins:
-            for j in self.ncols:
-                clone[i][j] = self.__pega_minimo_vizinhança(i, j, viz)
+        clone = self.crop()
+        for i in range(self.nlins):
+            for j in range(self.ncols):
+                self.matriz[i][j] = clone.__pega_minimo_vizinhança(i, j, viz)
     
     def segmentacao_SME(self, viz):
-        """ (int) -> None
+        """ (int) -> Pymagem
         RECEBE um inteiro viz e MODIFICA a imagem, aplicando uma segmentação SME
         com vizinhança de tamanho viz.
+
+        DEVOLVE a matriz self subtraida da matriz self com um filtro de erosão aplicado
         """
-        matriz_original = self.__clone()
-        return self - self.erosao(matriz_original)
+        matriz_erodida = self.crop()
+        matriz_erodida.erosao(viz)
+        return self - matriz_erodida
     ## ---------------------- Métodos privados --------------------------------
     def __pega_minimo_vizinhança(self, lin, col, viz):
         """ (int, int, int)-> number
@@ -183,11 +191,11 @@ class Pymagem:
         DEVOLVE o valor do pixel de menor valor na vizinhança centrada em (lin, col) com
         vizinhança de tamanho viz.
         """
-        max_bit = self.matriz[lin][col]
+        min_bit = self.matriz[lin][col]
         for i, j in self.__pega_vizinhança(lin, col, viz):
-            if self.matriz[i][j] > max_bit:
-                max_bit = self.matriz[i][j]
-        return max_bit
+            if self.matriz[i][j] < min_bit:
+                min_bit = self.matriz[i][j]
+        return min_bit
 
     def __pega_vizinhança(self, lin, col, viz):
         """ (int, int, int)-> Set
@@ -212,18 +220,3 @@ class Pymagem:
                 if self.matriz[lin][col] != self.matriz[i][j]:
                     pixels.append((i, j))
         return set(pixels)
-
-    def __clone(self):
-        """ (None) -> lista
-        DEVOLVE uma matriz clone da matriz armazenada no objeto pymagem
-        """
-        clone = []
-        for i in self.nlins:
-            linha = []
-            for j in self.ncols:
-                linha.append(self.matriz[i][j])
-            clone.append(linha)
-        return clone
-
-    
-    
