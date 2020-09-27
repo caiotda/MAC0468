@@ -144,8 +144,8 @@ class Pymagem:
         vizinhança de tamanho viz.
         """
         max_bit = self.matriz[lin][col]
-        for i, j in self.__pega_vizinhança(lin, col, viz)
-            if self.matriz[i][j] > max_bit
+        for i, j in self.__pega_vizinhança(lin, col, viz):
+            if self.matriz[i][j] > max_bit:
                 max_bit = self.matriz[i][j]
         return max_bit
 
@@ -158,10 +158,10 @@ class Pymagem:
         (lin,col) com vizinhança de tamanho viz.
         """
         min_x = max(lin - viz//2, 0)
-        max_x = min(len(self.img) - 1, lin + viz//2)
+        max_x = min(len(self.matriz) - 1, lin + viz//2)
 
         min_y = max(col - viz//2, 0)
-        max_y = min(len(self.img[0]) - 1, col + viz//2)
+        max_y = min(len(self.matriz[0]) - 1, col + viz//2)
 
 
         pixels = []
