@@ -90,14 +90,31 @@ class Pymagem:
         return (self.nlins, self.ncols)
 
     def __getitem__(self, index):
+        """ (lista) -> number
+        RECEBE uma lista contendo uma coordenada da imagem e
+        DEVOLVE o valor do pixel associado à coordenada
+        """
         lin, col = index
         return self.matriz[lin][col]
 
     def __setitem__(self, index, valor):
+        """ (lista, number) -> None
+        RECEBE uma lista contendo uma coordenada da imagem e um número.
+        MODIFICA a matriz associada a imagem, alterando o valor do pixel
+        associado à coordenada, alterando seu valor para `valor`.
+        """
         lin, col = index
         self.matriz[lin][col] = valor
 
     def __isub__(self, other):
+        """(pymagem) -> None
+        RECEBE um objeto da classe pymagem e 
+        MODIFICA o objeto da classe pymagem referenciado por self, fazendo
+        a subtração das matrizes associadas a cada objeto.
+
+        Implementa a operação de subtração entre dois objetos.
+
+        """
         for i in self.nlins:
             for j in self.ncols:
                 self.matriz = self.matriz[i][j] - other.matriz[i][j]
