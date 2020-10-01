@@ -8,8 +8,8 @@
 
 '''
 
-    Nome:
-    NUSP:
+    Nome: Caio Túlio de Deus Andrade
+    NUSP: 9797232
 
     Ao preencher esse cabeçalho com o meu nome e o meu número USP,
     declaro que todas as partes originais desse exercício programa (EP)
@@ -106,6 +106,33 @@ class Numpymagem:
     '''
 
     # escreva aqui os métodos da classe Numpymagem
+
+    def __init__(self, nlins, ncols, valor=0):
+        """ (self, int, int/numpy array) -> Numpymagem
+        RECEBE inteiros nlins, ncols e valor (opcional).
+        DEVOLVE um objeto da classe Numpymagem, que representa uma imagem de
+        nlins linhas e ncols colunas onde todos seus pixels possuem conteúdo 
+        igual a `valor`. Se valor for um array numpy, cria uma imagem com mesmo
+        conteúdo.
+        """
+        if type(valor) is np.ndarray:
+            self.array = np.array(valor)
+            self.shape = valor.shape
+        else:
+            self.array = np.full((nlins, ncols), valor)
+            self.shape = (nlins, ncols)
+
+    def __str__(self):
+        """ (self) -> string
+        DEVOLVE uma representação em string do objeto self
+        """
+        s = ''
+        nlins, ncols = self.shape
+        for i in range(nlins):
+            for j in range(ncols):
+                s += '%4d '%self.array[i, j]
+            s += '\n'
+        return s
 
 if __name__ == '__main__':
     main()
