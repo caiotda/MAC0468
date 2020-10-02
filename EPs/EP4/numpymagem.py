@@ -134,5 +134,14 @@ class Numpymagem:
             s += '\n'
         return s
 
+    def __getitem__(self, key):
+        """ (tupla de inteiros) -> pixel
+        RECEBE uma tupla de inteiros simbolizados por key e 
+        DEVOLVE o pixel com a coordenada especificada pelos dois inteiros
+        """
+        i, j = key
+        return self.array[i, j]
+
+
 if __name__ == '__main__':
     main()
