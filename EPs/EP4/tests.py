@@ -20,6 +20,7 @@ def main():
     ]
     correct = 0
     failed = 0
+    total = 0
     for test in tests:
         params, expected = test
         shape, val = params
@@ -30,7 +31,25 @@ def main():
         else:
             failed += 1
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
-    print(f"Fim dos testes. {correct}/{len(tests)} passaram")
+        total += 1
+    # Testes do shape
+    tests = [
+        (((1, 2), 1), (1,2)),
+        (((3,2), 1), (3, 2)),
+        (((1,1), 0), (1,1))
+    ]
+    for test in tests:
+        params, expected = test
+        shape, val = params
+        nlins, ncols = shape
+        res = Numpymagem(nlins, ncols, val)
+        if res.shape == expected:
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+    print(f"Fim dos testes. {correct}/{total} passaram")
 
 
 main()
