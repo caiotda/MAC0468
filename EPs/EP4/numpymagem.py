@@ -107,9 +107,10 @@ class Numpymagem:
 
     # escreva aqui os métodos da classe Numpymagem
 
-    def __init__(self, nlins, ncols, valor=0):
-        """ (self, int, int/numpy array) -> Numpymagem
-        RECEBE inteiros nlins, ncols e valor (opcional).
+    def __init__(self, shape, valor=0):
+        """ (self, tuple, int/numpy array) -> Numpymagem
+        RECEBE uma tupla de inteiros shape e um inteiro ou array
+        nupy valor (opcional).
         DEVOLVE um objeto da classe Numpymagem, que representa uma imagem de
         nlins linhas e ncols colunas onde todos seus pixels possuem conteúdo 
         igual a `valor`. Se valor for um array numpy, cria uma imagem com mesmo
@@ -119,6 +120,7 @@ class Numpymagem:
             self.array = np.array(valor)
             self.shape = valor.shape
         else:
+            nlins, ncols = shape
             self.array = np.full((nlins, ncols), valor)
             self.shape = (nlins, ncols)
 

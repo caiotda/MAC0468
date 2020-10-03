@@ -15,17 +15,17 @@ def main():
             k += 1
         lista.append(linha)
     tests = [
-        (((5, 5), np.array(lista)), np.array(lista))
+        (((), np.array(lista)), np.array(lista))
         ,(((2, 4), 1), np.full((2, 4), 1))
     ]
     correct = 0
     failed = 0
     total = 0
+    # Teste do construtor
     for test in tests:
         params, expected = test
         shape, val = params
-        nlins, ncols = shape
-        res = Numpymagem(nlins, ncols, val)
+        res = Numpymagem(shape, val)
         if np.array_equal(res.array, expected):
             correct += 1
         else:
@@ -41,14 +41,15 @@ def main():
     for test in tests:
         params, expected = test
         shape, val = params
-        nlins, ncols = shape
-        res = Numpymagem(nlins, ncols, val)
+        res = Numpymagem(shape, val)
         if res.shape == expected:
             correct += 1
         else:
             failed += 1
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
         total += 1
+
+    # Testes do get attr
 
     a = np.array([[1,2,3], [4,5,6]])
     b = np.array([[-1, 3, 5], [10, 12, 132]])
@@ -57,12 +58,11 @@ def main():
         (((1, 0), b), 10),
     ]
 
-    # Testes do get attr
     for test in tests:
         params, expected = test
         key, val = params
         i, j = key
-        res = Numpymagem(0, 0, val)
+        res = Numpymagem((0, 0), val)
         res = res[i, j]
         if res == expected:
             correct += 1
