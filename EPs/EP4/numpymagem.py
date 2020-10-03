@@ -155,6 +155,15 @@ class Numpymagem:
         i, j = key
         self.array[i, j] = val
 
+    def __add__(self, other):
+        """ (Numpymagem) -> Numpymagem
+        RECEBE uma numpymagem other e
+        DEVOLVE um Numpymagem na qual o valor de cada pixel com coordenada (i,j)
+        consiste na soma de todo pixel (i,j) em self com o pixel (i,j)
+        correspondente em other
+        """
+        soma = self.array + other.array
+        return Numpymagem((), soma)
 
 if __name__ == '__main__':
     main()

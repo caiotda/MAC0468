@@ -90,6 +90,33 @@ def main():
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
         total += 1
 
+    # Testes do __add__
+
+    a = np.array([1,2,3])
+    b = np.array([1,1,1])
+    a_b = np.array([2,3,4])
+    c = np.array([0,0,0])
+    a_c = a
+    a = Numpymagem((), a)
+    b = Numpymagem((), b)
+    a_b = Numpymagem((), a_b)
+    c = Numpymagem((), c)
+    a_c = Numpymagem((), a_c)
+    tests = [
+        ((a, b), a_b),
+        ((a,c), a_c),
+    ]
+    for test in tests:
+        params, expected = test
+        left, right = params
+        res = left + right
+        if np.array_equal(res.array, expected.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+
 
     print(f"Fim dos testes. {correct}/{total} passaram")
 
