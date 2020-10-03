@@ -71,6 +71,25 @@ def main():
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
         total += 1
 
+    # Testes do set attr
+    tests = [
+        (((0, 2), 5), 5),
+        (((1, 2), -2), -2)
+    ]
+    for test in tests:
+        params, expected = test
+        key, val = params
+        i, j = key
+        teste = Numpymagem((), a)
+        teste[i, j] = val
+        res = teste[i, j]
+        if res == expected:
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+
 
     print(f"Fim dos testes. {correct}/{total} passaram")
 

@@ -137,12 +137,23 @@ class Numpymagem:
         return s
 
     def __getitem__(self, key):
-        """ (tupla de inteiros) -> pixel
-        RECEBE uma tupla de inteiros simbolizados por key e 
+        """ (par inteiros) -> pixel
+        RECEBE um par de inteiros simbolizados por key e 
         DEVOLVE o pixel com a coordenada especificada pelos dois inteiros
         """
         i, j = key
         return self.array[i, j]
+
+    def __setitem__(self, key, val):
+        """(par de inteiros, valor) -> None
+        RECEBE um par de inteiros e um valor
+        MODIFICA o objeto referenciado por self, modificando
+        o pixel referenciado por 'key', trocando seu valor para `val`.
+        O tipo de `val` deve ser o mesmo dos itens armazenados em self.array
+        """
+
+        i, j = key
+        self.array[i, j] = val
 
 
 if __name__ == '__main__':
