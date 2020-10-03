@@ -165,5 +165,15 @@ class Numpymagem:
         soma = self.array + other.array
         return Numpymagem((), soma)
 
+    def __mul__(self, escalar):
+        """ (number) -> Numpymagem
+        RECEBE uma numero  escalar e
+        DEVOLVE um Numpymagem na qual o valor de cada pixel com coordenada (i,j)
+        consiste na multiplicacção de todo pixel (i,j) em self com pelo escalar
+        """
+
+        mul = self.array * escalar
+        return Numpymagem((), mul)
+
 if __name__ == '__main__':
     main()

@@ -117,6 +117,24 @@ def main():
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
         total += 1
 
+    # Testes do mul
+
+    tests = [
+        ((a, 2), Numpymagem((), np.array([2, 4, 6]))),
+        ((a, 0),Numpymagem((), np.array([0, 0, 0]))),
+    ]
+
+    for test in tests:
+        params, expected = test
+        left, escalar = params
+        res = left * escalar
+        if np.array_equal(res.array, expected.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+
 
     print(f"Fim dos testes. {correct}/{total} passaram")
 
