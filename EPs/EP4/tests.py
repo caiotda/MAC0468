@@ -99,12 +99,12 @@ def main():
     a_c = a
     a = Numpymagem((), a)
     b = Numpymagem((), b)
-    a_b = Numpymagem((), a_b)
+    a_b_soma = Numpymagem((), a_b)
     c = Numpymagem((), c)
-    a_c = Numpymagem((), a_c)
+    a_c_soma = Numpymagem((), a_c)
     tests = [
-        ((a, b), a_b),
-        ((a,c), a_c),
+        ((a, b), a_b_soma),
+        ((a,c), a_c_soma),
     ]
     for test in tests:
         params, expected = test
@@ -116,6 +116,27 @@ def main():
             failed += 1
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
         total += 1
+
+    a_b_sub = Numpymagem((), np.array([0, 1, 2]))
+    a_c_sub = Numpymagem((), a_c)
+    d = Numpymagem((), np.array([-1, -1, -1]))
+    a_d_sub = Numpymagem((), np.array([2, 3, 4]))
+    tests = [
+        ((a, b), a_b_sub),
+        ((a,c), a_c_sub),
+        ((a, d), a_d_sub)
+    ]
+    for test in tests:
+        params, expected = test
+        left, right = params
+        res = left - right
+        if np.array_equal(res.array, expected.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+
 
 
     print(f"Fim dos testes. {correct}/{total} passaram")
