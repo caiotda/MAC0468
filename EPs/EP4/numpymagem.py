@@ -165,15 +165,5 @@ class Numpymagem:
         soma = self.array + other.array
         return Numpymagem((), soma)
 
-    def __sub__(self, other):
-        """(Numpymagem) -> Numpymagem
-        RECEBE um Numpymagem other e
-        DEVOLVE um Numpymagem na qual o valor de cada pixel com coordenada (i,j)
-        consiste na subtração de todo pixel (i,j) em self com o pixel (i,j)
-        correspondente em other
-        """
-        sub = self.array - other.array
-        return Numpymagem((), sub)
-
 if __name__ == '__main__':
     main()
