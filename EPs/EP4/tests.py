@@ -136,6 +136,36 @@ def main():
         total += 1
 
 
+    # Testes do crop
+    a = [[1,2,3,4,5], [6, 7, 8, 9, 10], [11, 12 ,13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]]
+    a_1 = Numpymagem((), np.array(a))
+    a_2 = Numpymagem((), np.array([[7, 8, 9], [12, 13, 14], [17, 18, 19]]))
+    a_3 = Numpymagem((), np.array([[1,2], [6,7]]))
+    a_4 = Numpymagem((), np.array([[1,2,3,4], [6,7,8,9]]))
+
+    a_crop = Numpymagem((), np.array(a))
+
+    tests = [
+        ((1, 1, 4, 4), a_2),
+        ((), a_1),
+        ((0, 0, 2, 2), a_3),
+        ((0, 0, 2, 4), a_4)
+    ]
+
+    for test in tests:
+        params, expected = test
+        if len(params) > 0:
+            tlx, tly, brx, bry = params
+            res = a_crop.crop(tlx, tly, brx, bry)
+        else:
+            res = a_crop.crop()
+        if np.array_equal(res.array, expected.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+
     print(f"Fim dos testes. {correct}/{total} passaram")
 
 

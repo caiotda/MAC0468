@@ -175,5 +175,20 @@ class Numpymagem:
         mul = self.array * escalar
         return Numpymagem((), mul)
 
+    def crop(self,tlx = 0 ,tly = 0, brx = None, bry = None):
+        """(int, int, int, int) -> Numpymagem
+        RECEBE dois pares de inteiros (opcionais) tlx, tly, brx e bry
+        DEVOLVE uma região da imagem referenciada por self delimitada 
+        pelos pontos tl e br, onde tl = (tlx, tly) e br = (brx, bry).
+        Essa região consiste de um quadrilátero com canto superior 
+        esquerdo = tl (top left) e canto inferior direito br (bottom right). 
+        """
+        if brx is None:
+            brx = self.shape[0]
+        if bry is None:
+            bry = self.shape[1]
+        vetor_cropado = self.array[tlx:brx, tly:bry]
+        return Numpymagem((), vetor_cropado)
+
 if __name__ == '__main__':
     main()
