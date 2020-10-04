@@ -190,5 +190,30 @@ class Numpymagem:
         vetor_cropado = self.array[tlx:brx, tly:bry]
         return Numpymagem((), vetor_cropado)
 
+    def paste(self, other, coords):
+        """ (Numpymagem, tupla de inteiros) -> None
+        RECEBE uma numpymagem e uma tupla de inteiros representando uma coorde-
+        nada.
+        MODIFICA self, sobrepondo a imagem other de forma que o canto superior
+        esquerdo de other fica alinhado com coords. Modifica a intersecção entre
+        other e self copiando os valores pertinentes de other para a imagem 
+        self.
+        """
+
+        i, j = coords
+        nlins, ncols = self.shape
+        if i < self.shape[0] and j < self.shape[0]:
+            # Montar a região de intersecção
+            nlins_other, ncols_other = other.shape
+            if(j + nlins_other > nlins):
+                nlins_intersect = nlins - j
+            else:
+                nlins_intersect = nlins_other
+            if(i + ncols_other > ncols):
+                ncols_intersect = ncols - i
+            else:
+                ncols_intersect = ncols_other
+            intersect = other.crop(0, 0, nlins_intersect, ncols_intersect)
+            self.array[i:(i + nlins_intersect), j:(j + ncols_intersect)] = intersect.array
 if __name__ == '__main__':
     main()

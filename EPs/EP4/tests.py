@@ -135,7 +135,6 @@ def main():
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
         total += 1
 
-
     # Testes do crop
     a = [[1,2,3,4,5], [6, 7, 8, 9, 10], [11, 12 ,13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]]
     a_1 = Numpymagem((), np.array(a))
@@ -164,6 +163,39 @@ def main():
         else:
             failed += 1
             print(f"Teste falhou com parametros {params}. Esperava \n{expected}, recebi\n {res}")
+        total += 1
+
+
+
+    # Testes do paste
+    target = Numpymagem((), np.array([[1,2,3], [4,5,6], [7,8,9]]))
+    pasted1 = Numpymagem((), np.array([[0,1], [1,0]]))
+    pasted2 = Numpymagem((), np.array([[9, 9, 9, 9], [9,9,9,9], [9,9,9,9], [9,9,9,9]]))
+    pasted3 = Numpymagem((), np.array([[5, 5], [5, 5], [5,5]]))
+    pasted4 = Numpymagem((), np.array([[5, 5, 5], [5, 5, 5]]))
+    pasted5 = Numpymagem((), np.array([[-1]]))
+    tests = [
+        (( (0, 0), pasted1), Numpymagem((), np.array([[0, 1, 3], [1, 0, 6], [7,8,9]]))),
+        (( (1, 1), pasted1), Numpymagem((), np.array([[1, 2, 3], [4, 0, 1], [7,1,0]]))),
+        (( (0, 1), pasted1), Numpymagem((), np.array([[1, 0, 1], [4, 1, 0], [7,8,9]]))),
+        (( (2, 2), pasted1), Numpymagem((), np.array([[1, 2, 3], [4, 5, 6], [7,8,0]]))),
+        (( (0, 0), pasted2), Numpymagem((), np.array([[9,9,9], [9,9,9], [9,9,9]]))),
+        (( (0, 0), pasted4), Numpymagem((), np.array([[5,5,5], [5,5,5], [7,8,9]]))),
+        (( (0, 0), pasted5), Numpymagem((), np.array([[-1, 2, 3], [4, 5, 6], [7,8,9]]))),
+        (( (1, 1), pasted5), Numpymagem((), np.array([[1, 2, 3], [4, -1, 6], [7,8,9]]))),
+    ]
+
+    for test in tests:
+        args, expected = test
+        coords, pasted = args
+        test = target.crop()
+        test.paste(pasted, coords)
+        res = test.crop()
+        if np.array_equal(test.array, expected.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros {coords}. Esperava \n{expected}, recebi\n{res}")
         total += 1
 
     print(f"Fim dos testes. {correct}/{total} passaram")
