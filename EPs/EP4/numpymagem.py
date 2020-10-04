@@ -215,5 +215,30 @@ class Numpymagem:
                 ncols_intersect = ncols_other
             intersect = other.crop(0, 0, nlins_intersect, ncols_intersect)
             self.array[i:(i + nlins_intersect), j:(j + ncols_intersect)] = intersect.array
+
+    def pinte_disco(self, lin, col, raio, valor):
+        """ (int, int, int, int) -> None
+        RECEBE inteiros lin, col, raio, valor
+        MODIFICA a imagem self pintando um disco centrado em  lin, col com raio
+        igual a 'raio' modificando a intersecção desse disco com self com o
+        valor `valor`.
+        """
+
+        for i in self.shape[0]:
+            for j in self.shape[1]:
+                if self.__in_circunference(i, j, lin, col, raio):
+                    self.array[i, j] = valor
+
+    def __in_circunference(self, x, y, a, b, r):
+        """ (int, int, int, int, int) -> Bool
+        RECEBE inteiros x, y, a, b, r e 
+        DEVOLVE um booleano avaliando se o ponto(x,y) está dentro da 
+        circunferencia centrada em (a,b) e com raio r. Isto é, se
+        (x - a)^2 + (y - b)^2 <= r^2
+        """
+
+        return (x - a)**2 + (y - b) **2 <= r**2
+
+
 if __name__ == '__main__':
     main()
