@@ -202,7 +202,9 @@ class Numpymagem:
         """
         tly = max(lin, 0)
         tly_intersect = abs(min(lin, 0))
+        #Verifica quantas linhas de other não entraram na intersecção
         tlx_intersect = abs(min(col, 0))
+        #Verifica quantas colunas de other não entraram na intersecção
         tlx = max(col, 0)
         brx = min(tlx + other.shape[1], self.shape[1]) - 1
         bry = min(tly + other.shape[0], self.shape[0]) - 1
@@ -210,7 +212,8 @@ class Numpymagem:
         nlins = bry - tly + 1
         
         intersect = other.crop(tly_intersect, tlx_intersect, nlins, ncols)
-        self.array[tly:(bry+1 - tly_intersect),tlx :(brx+1 - tlx_intersect)] = intersect.array
+        self.array[tly:(bry+1 - tly_intersect),tlx :(brx+1 - tlx_intersect)] =\
+            intersect.array
 
     def pinte_disco(self, lin, col, raio, valor):
         """ (int, int, int, int) -> None
