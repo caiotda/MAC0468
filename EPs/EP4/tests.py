@@ -166,30 +166,49 @@ def main():
         total += 1
 
 
+    a = [
+        [1, 1, 2, 2, 2, 2, 2, 1],
+        [1, 1, 2, 2, 2, 2, 2, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+    ]
 
+    b = [
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 2, 2],
+    ]
     # Testes do paste
-    target = Numpymagem((), np.array([[1,2,3], [4,5,6], [7,8,9]]))
+    target1 = Numpymagem((), np.array([[1,2,3], [4,5,6], [7,8,9]]))
+    target2 = Numpymagem((6,8), 1)
     pasted1 = Numpymagem((), np.array([[0,1], [1,0]]))
     pasted2 = Numpymagem((), np.array([[9, 9, 9, 9], [9,9,9,9], [9,9,9,9], [9,9,9,9]]))
-    pasted3 = Numpymagem((), np.array([[5, 5], [5, 5], [5,5]]))
     pasted4 = Numpymagem((), np.array([[5, 5, 5], [5, 5, 5]]))
     pasted5 = Numpymagem((), np.array([[-1]]))
     tests = [
-        (( (0, 0), pasted1), Numpymagem((), np.array([[0, 1, 3], [1, 0, 6], [7,8,9]]))),
-        (( (1, 1), pasted1), Numpymagem((), np.array([[1, 2, 3], [4, 0, 1], [7,1,0]]))),
-        (( (0, 1), pasted1), Numpymagem((), np.array([[1, 0, 1], [4, 1, 0], [7,8,9]]))),
-        (( (2, 2), pasted1), Numpymagem((), np.array([[1, 2, 3], [4, 5, 6], [7,8,0]]))),
-        (( (0, 0), pasted2), Numpymagem((), np.array([[9,9,9], [9,9,9], [9,9,9]]))),
-        (( (0, 0), pasted4), Numpymagem((), np.array([[5,5,5], [5,5,5], [7,8,9]]))),
-        (( (0, 0), pasted5), Numpymagem((), np.array([[-1, 2, 3], [4, 5, 6], [7,8,9]]))),
-        (( (1, 1), pasted5), Numpymagem((), np.array([[1, 2, 3], [4, -1, 6], [7,8,9]]))),
+        (( (0, 0),target1,  pasted1), Numpymagem((), np.array([[0, 1, 3], [1, 0, 6], [7,8,9]]))),
+        (( (1, 1),target1,  pasted1), Numpymagem((), np.array([[1, 2, 3], [4, 0, 1], [7,1,0]]))),
+        (( (0, 1),target1,  pasted1), Numpymagem((), np.array([[1, 0, 1], [4, 1, 0], [7,8,9]]))),
+        (( (2, 2),target1,  pasted1), Numpymagem((), np.array([[1, 2, 3], [4, 5, 6], [7,8,0]]))),
+        (( (0, 0),target1,  pasted2), Numpymagem((), np.array([[9,9,9], [9,9,9], [9,9,9]]))),
+        (( (0, 0),target1,  pasted4), Numpymagem((), np.array([[5,5,5], [5,5,5], [7,8,9]]))),
+        (( (0, 0),target1,  pasted5), Numpymagem((), np.array([[-1, 2, 3], [4, 5, 6], [7,8,9]]))),
+        (( (1, 1),target1,  pasted5), Numpymagem((), np.array([[1, 2, 3], [4, -1, 6], [7,8,9]]))),
+        (( (-1, 2), target2, Numpymagem((3, 5), 2)), Numpymagem((), np.array(a))),
+        (( (5, 6), target2, Numpymagem((3, 5), 2)), Numpymagem((), np.array(b)))
     ]
 
     for test in tests:
         args, expected = test
-        coords, pasted = args
+        coords, target, pasted = args
+        lin, col = coords
         test = target.crop()
-        test.paste(pasted, coords)
+        test.paste(pasted, lin, col)
         res = test.crop()
         if np.array_equal(test.array, expected.array):
             correct += 1
@@ -200,7 +219,7 @@ def main():
 
     # Testes do pinte_retangulo
 
-    canvas1 = Numpymagem((4, 4), 0.0)
+    """ canvas1 = Numpymagem((4, 4), 0.0)
     ret1 = np.array([[1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1 ,1 ,0 ,0]])
     ret2 = np.array([[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
     ret3 = np.array([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
@@ -224,7 +243,7 @@ def main():
         else:
             failed += 1
             print(f"Teste falhou com coordenadas {coords}, valor {val}. Esperava \n{expected}, \nrecebi \n{res}")
-        total += 1
+        total += 1 """
 
 
     print(f"Fim dos testes. {correct}/{total} passaram. {failed} testes falharam.")

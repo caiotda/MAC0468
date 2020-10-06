@@ -188,33 +188,29 @@ class Numpymagem:
         if bry is None:
             bry = self.shape[1]
         vetor_cropado = self.array[tlx:brx, tly:bry]
+        #print(f"vetor cropado: {vetor_cropado}")
         return Numpymagem((), vetor_cropado)
 
-    def paste(self, other, coords):
+    def paste(self, other, lin, col):
         """ (Numpymagem, tupla de inteiros) -> None
-        RECEBE uma numpymagem e uma tupla de inteiros representando uma coorde-
+        RECEBE uma numpymagem e dois inteiros representando uma coorde-
         nada.
         MODIFICA self, sobrepondo a imagem other de forma que o canto superior
         esquerdo de other fica alinhado com coords. Modifica a intersecção entre
         other e self copiando os valores pertinentes de other para a imagem 
         self.
         """
-
-        i, j = coords
-        nlins, ncols = self.shape
-        if i < self.shape[0] and j < self.shape[0]:
-            # Montar a região de intersecção
-            nlins_other, ncols_other = other.shape
-            if(i + nlins_other > nlins):
-                nlins_intersect = nlins - i
-            else:
-                nlins_intersect = nlins_other
-            if(j + ncols_other > ncols):
-                ncols_intersect = ncols - j
-            else:
-                ncols_intersect = ncols_other
-            intersect = other.crop(0, 0, nlins_intersect, ncols_intersect)
-            self.array[i:(i + nlins_intersect), j:(j + ncols_intersect)] = intersect.array
+        tly = max(lin, 0)
+        tly_intersect = abs(min(lin, 0))
+        tlx_intersect = abs(min(col, 0))
+        tlx = max(col, 0)
+        brx = min(tlx + other.shape[1], self.shape[1]) - 1
+        bry = min(tly + other.shape[0], self.shape[0]) - 1
+        ncols = brx - tlx + 1
+        nlins = bry - tly + 1
+        
+        intersect = other.crop(tly_intersect, tlx_intersect, nlins, ncols)
+        self.array[tly:(bry+1 - tly_intersect),tlx :(brx+1 - tlx_intersect)] = intersect.array
 
     def pinte_disco(self, lin, col, raio, valor):
         """ (int, int, int, int) -> None
@@ -249,7 +245,7 @@ class Numpymagem:
         ncols = brx - tlx + 1
         nlins = bry - tly + 1
         retangulo = Numpymagem((nlins, ncols), valor)
-        self.paste(retangulo, (tly, tlx))
+        self.paste(retangulo, tly, tlx)
 
 
 if __name__ == '__main__':
