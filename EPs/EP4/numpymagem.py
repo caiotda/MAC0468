@@ -247,7 +247,7 @@ class Numpymagem:
         """
         tlx = max(tlx, 0)
         tly = max(tly, 0)
-        nlins = brx - tlx + 1
+        nlins = brx - tlx
         ncols = bry - tly
         retangulo = Numpymagem((nlins, ncols), valor)
         self.paste(retangulo, tlx, tly)
