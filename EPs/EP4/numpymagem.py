@@ -200,19 +200,19 @@ class Numpymagem:
         other e self copiando os valores pertinentes de other para a imagem 
         self.
         """
-        tly = max(lin, 0)
-        tly_intersect = abs(min(lin, 0))
+        tlx = max(lin, 0)
+        tlx_intersect = abs(min(lin, 0))
         #Verifica quantas linhas de other não entraram na intersecção
-        tlx_intersect = abs(min(col, 0))
+        tly_intersect = abs(min(col, 0))
         #Verifica quantas colunas de other não entraram na intersecção
-        tlx = max(col, 0)
-        brx = min(tlx + other.shape[1], self.shape[1]) - 1
-        bry = min(tly + other.shape[0], self.shape[0]) - 1
-        ncols = brx - tlx + 1
-        nlins = bry - tly + 1
+        tly = max(col, 0)
+        brx = min(tlx + other.shape[0], self.shape[0]) - 1
+        bry = min(tly + other.shape[1], self.shape[1]) - 1
+        nlins = brx - tlx + 1
+        ncols = bry - tly + 1
         
-        intersect = other.crop(tly_intersect, tlx_intersect, nlins, ncols)
-        self.array[tly:(bry+1 - tly_intersect),tlx :(brx+1 - tlx_intersect)] =\
+        intersect = other.crop(tlx_intersect, tly_intersect, nlins, ncols)
+        self.array[tlx:(brx+1 - tlx_intersect),tly :(bry+1 - tly_intersect)] =\
             intersect.array
 
     def pinte_disco(self, lin, col, raio, valor):
@@ -245,10 +245,10 @@ class Numpymagem:
         definido pelas coordenadas (tlx, tly) e (brx, bry) com a imagem,
         pintando a intersecção com o valor `valor`
         """
-        ncols = brx - tlx + 1
-        nlins = bry - tly + 1
+        nlins = brx - tlx + 1
+        ncols = bry - tly + 1
         retangulo = Numpymagem((nlins, ncols), valor)
-        self.paste(retangulo, tly, tlx)
+        self.paste(retangulo, tlx, tly)
 
 
 if __name__ == '__main__':

@@ -219,11 +219,11 @@ def main():
 
     # Testes do pinte_retangulo
 
-    """ canvas1 = Numpymagem((4, 4), 0.0)
-    ret1 = np.array([[1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1 ,1 ,0 ,0]])
-    ret2 = np.array([[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
+    canvas1 = Numpymagem((4, 4), 0.0)
+    ret1 = np.array([[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
+    ret2 = np.array([[1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1 ,1 ,0 ,0]])
     ret3 = np.array([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
-    ret4 = np.array([[0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0 ,0 ,0 ,1]])
+    ret4 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1 ,1 ,1 ,1]])
 
     tests = [
         (( (0, 0, 1, 3), 1), Numpymagem((), ret1)),
@@ -243,7 +243,7 @@ def main():
         else:
             failed += 1
             print(f"Teste falhou com coordenadas {coords}, valor {val}. Esperava \n{expected}, \nrecebi \n{res}")
-        total += 1 """
+        total += 1
 
 
     print(f"Fim dos testes. {correct}/{total} passaram. {failed} testes falharam.")
