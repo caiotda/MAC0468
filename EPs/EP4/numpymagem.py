@@ -223,8 +223,8 @@ class Numpymagem:
         valor `valor`.
         """
 
-        for i in self.shape[0]:
-            for j in self.shape[1]:
+        for i in range(self.shape[0]):
+            for j in range(self.shape[1]):
                 if self.__in_circunference(i, j, lin, col, raio):
                     self.array[i, j] = valor
 
@@ -245,8 +245,10 @@ class Numpymagem:
         definido pelas coordenadas (tlx, tly) e (brx, bry) com a imagem,
         pintando a intersecção com o valor `valor`
         """
+        tlx = max(tlx, 0)
+        tly = max(tly, 0)
         nlins = brx - tlx + 1
-        ncols = bry - tly + 1
+        ncols = bry - tly
         retangulo = Numpymagem((nlins, ncols), valor)
         self.paste(retangulo, tlx, tly)
 

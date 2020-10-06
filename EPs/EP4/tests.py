@@ -219,24 +219,47 @@ def main():
 
     # Testes do pinte_retangulo
 
+    a = [
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 1, 1, 1],
+        [0, 0, 0, 0, 0, 1, 1, 1],
+        [0, 0, 0, 0, 0, 1, 1, 1],
+        [0, 0, 0, 0, 0, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+    b = [
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+
     canvas1 = Numpymagem((4, 4), 0.0)
-    ret1 = np.array([[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
-    ret2 = np.array([[1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1 ,1 ,0 ,0]])
-    ret3 = np.array([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
-    ret4 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1 ,1 ,1 ,1]])
+    canvas2 = Numpymagem((8, 8), 1)
+    ret1 = np.array([[1, 1, 1, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
+    ret2 = np.array([[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1 ,0 ,0 ,0]])
+    ret4 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1 ,1 ,1 ,0]])
 
     tests = [
-        (( (0, 0, 1, 3), 1), Numpymagem((), ret1)),
-        (( (0, 0, 3, 1), 1), Numpymagem((), ret2)),
-        (( (0, 0, 0, 0), 1), Numpymagem((), ret3)),
-        (( (3, 0, 3, 3), 1), Numpymagem((), ret4)),
+        (( (0, 0, 1, 3), canvas1, 1), Numpymagem((), ret1)),
+        (( (0, 0, 3, 1), canvas1, 1), Numpymagem((), ret2)),
+        (( (3, 0, 3, 3), canvas1, 1), Numpymagem((), ret4)),
+        (( (3, -1, 6, 5), canvas2, 0), Numpymagem((), np.array(a))),
+        (( (3, 0, 6, 5), canvas2, 0), Numpymagem((), np.array(a))),
+        (( (3, 0, 6, 6), canvas2, 0), Numpymagem((), np.array(b))),
     ]
 
     for test in tests: 
         params, expected = test
-        coords, val = params
+        coords, canvas, val = params
         tlx, tly, brx, bry = coords
-        res = canvas1.crop()
+        res = canvas.crop()
         res.pinte_retangulo(tlx, tly, brx, bry, val)
         if np.array_equal(expected.array, res.array):
             correct += 1
