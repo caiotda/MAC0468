@@ -205,12 +205,12 @@ class Numpymagem:
         if i < self.shape[0] and j < self.shape[0]:
             # Montar a região de intersecção
             nlins_other, ncols_other = other.shape
-            if(j + nlins_other > nlins):
-                nlins_intersect = nlins - j
+            if(i + nlins_other > nlins):
+                nlins_intersect = nlins - i
             else:
                 nlins_intersect = nlins_other
-            if(i + ncols_other > ncols):
-                ncols_intersect = ncols - i
+            if(j + ncols_other > ncols):
+                ncols_intersect = ncols - j
             else:
                 ncols_intersect = ncols_other
             intersect = other.crop(0, 0, nlins_intersect, ncols_intersect)
@@ -238,6 +238,18 @@ class Numpymagem:
         """
 
         return (x - a)**2 + (y - b) **2 <= r**2
+
+    def pinte_retangulo(self, tlx, tly, brx, bry, valor):
+        """(int, int, int, int, int) -> None
+        RECEBE dois pares de inteiros  tlx, tly, brx, bry e um inteiro valor.
+        MODIFICA a imagem self na região de intersecção entre o retângulo
+        definido pelas coordenadas (tlx, tly) e (brx, bry) com a imagem,
+        pintando a intersecção com o valor `valor`
+        """
+        ncols = brx - tlx + 1
+        nlins = bry - tly + 1
+        retangulo = Numpymagem((nlins, ncols), valor)
+        self.paste(retangulo, (tly, tlx))
 
 
 if __name__ == '__main__':

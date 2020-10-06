@@ -198,7 +198,36 @@ def main():
             print(f"Teste falhou com parametros {coords}. Esperava \n{expected}, recebi\n{res}")
         total += 1
 
-    print(f"Fim dos testes. {correct}/{total} passaram")
+    # Testes do pinte_retangulo
+
+    canvas1 = Numpymagem((4, 4), 0.0)
+    ret1 = np.array([[1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1 ,1 ,0 ,0]])
+    ret2 = np.array([[1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
+    ret3 = np.array([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0 ,0 ,0 ,0]])
+    ret4 = np.array([[0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0 ,0 ,0 ,1]])
+
+    tests = [
+        (( (0, 0, 1, 3), 1), Numpymagem((), ret1)),
+        (( (0, 0, 3, 1), 1), Numpymagem((), ret2)),
+        (( (0, 0, 0, 0), 1), Numpymagem((), ret3)),
+        (( (3, 0, 3, 3), 1), Numpymagem((), ret4)),
+    ]
+
+    for test in tests: 
+        params, expected = test
+        coords, val = params
+        tlx, tly, brx, bry = coords
+        res = canvas1.crop()
+        res.pinte_retangulo(tlx, tly, brx, bry, val)
+        if np.array_equal(expected.array, res.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com coordenadas {coords}, valor {val}. Esperava \n{expected}, \nrecebi \n{res}")
+        total += 1
+
+
+    print(f"Fim dos testes. {correct}/{total} passaram. {failed} testes falharam.")
 
 
 main()
