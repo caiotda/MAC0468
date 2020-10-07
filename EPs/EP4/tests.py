@@ -267,6 +267,37 @@ def main():
         total += 1
 
 
+
+    # Testes do pinta disco
+    a = [ 
+        [0.0, 0.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 0.0, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 0.0, 0.0, 1.1, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 1.1, 1.1, 1.1],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    ]
+    alvo1 = Numpymagem((9, 9), 0.)
+    tests = [
+        (( (0, 8, 7, 1.1), alvo1 ), Numpymagem((), np.array(a)))
+    ]
+
+    for test in tests:
+        input_d, expected = test
+        params, target = input_d
+        lin, col, raio, valor = params
+        res = target.crop()
+        res.pinte_disco(lin, col, raio, valor)
+        if np.array_equal(res.array, expected.array):
+            correct += 1
+        else:
+            failed += 1
+            print(f"Teste falhou com parametros (lin, col, raio, valor)\
+                {lin, col, raio, valor}. Esperava \n{expected}, \nrecebi \n{res}")
+        total += 1
     print(f"Fim dos testes. {correct}/{total} passaram. {failed} testes falharam.")
 
 

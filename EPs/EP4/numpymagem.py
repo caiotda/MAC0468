@@ -236,13 +236,13 @@ class Numpymagem:
         (x - a)^2 + (y - b)^2 <= r^2
         """
 
-        return (x - a)**2 + (y - b) **2 <= r**2
+        return (x - a)**2 + (y - b) **2 < r**2
 
     def pinte_retangulo(self, tlx, tly, brx, bry, valor):
         """(int, int, int, int, int) -> None
         RECEBE dois pares de inteiros  tlx, tly, brx, bry e um inteiro valor.
         MODIFICA a imagem self na região de intersecção entre o retângulo
-        definido pelas coordenadas (tlx, tly) e (brx, bry) com a imagem,
+        definido pelas coordenadas (tlx, tly) e (brx-1, bry) com a imagem,
         pintando a intersecção com o valor `valor`
         """
         tlx = max(tlx, 0)
