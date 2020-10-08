@@ -21,7 +21,8 @@ class Vetor3D:
 
     __rmul__ = __mul__ 
     # A implementação do rmul é identica, então vamos simplesmente referenciar
-    # a implementação do método magico __mul__
+    # a implementação do método magico __mul__ para lidar com casos como
+    # escalar * (1,2,3)
     
     def soma(self):
         soma = 0
