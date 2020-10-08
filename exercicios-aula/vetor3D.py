@@ -14,17 +14,14 @@ class Vetor3D:
         return Vetor3D(res)
 
     def __mul__(self, escalar):
-        if isinstance(escalar, Vetor3D):
-            esq = escalar
-            dir = self
-        else:
-            esq = self
-            dir = escalar
         res = []
-        for item in esq.pos:
-            res.append(item * dir)
+        for item in self.pos:
+            res.append(item * escalar)
         return Vetor3D(res)
-    __rmul__ = __mul__
+
+    __rmul__ = __mul__ 
+    # A implementação do rmul é identica, então vamos simplesmente referenciar
+    # a implementação do método magico __mul__
     
     def soma(self):
         soma = 0
