@@ -77,19 +77,6 @@ def main():
     branco = Numpymagem( (ALTURA, LARGURA), WHITE)
     print(f"Está compatível com numpymutil: {type(preto.data) is np.ndarray}")
     cor = BLACK
-    for i in range(60): # gera 2s de fundo preto
-        video.append(preto)
-    for i in range(60): # muda fundo para branco, gradualmente
-        cor = (cor+3)%WHITE
-        cinza = Numpymagem( (ALTURA, LARGURA), cor)
-        video.append(cinza)
-    for i in range(60): # mostra 2s de fundo branco
-        video.append(branco)
-    for i in range(60): # volta para preto
-        cor = (cor-3)%WHITE
-        cinza = Numpymagem( (ALTURA, LARGURA), cor)
-        video.append(cinza)
-
 
     for i in range(120):
         RAIO = LARGURA // 7
