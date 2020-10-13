@@ -44,10 +44,11 @@ import numpy as np
 from numpymagem import Numpymagem
 from numpymutil import mostre_video
 from numpymutil import salve_video
+import math
 
 # Escreva aqui outras constantes que desejar
-ALTURA  = 120
-LARGURA = 160
+ALTURA  = 200
+LARGURA = 320
 BLACK = 0
 WHITE = 250
 
@@ -76,7 +77,6 @@ def main():
     branco = Numpymagem( (ALTURA, LARGURA), WHITE)
     print(f"Está compatível com numpymutil: {type(preto.data) is np.ndarray}")
     cor = BLACK
-
     for i in range(60): # gera 2s de fundo preto
         video.append(preto)
     for i in range(60): # muda fundo para branco, gradualmente
@@ -90,6 +90,18 @@ def main():
         cinza = Numpymagem( (ALTURA, LARGURA), cor)
         video.append(cinza)
 
+
+    for i in range(120):
+        RAIO = LARGURA // 7
+        canvas = Numpymagem((ALTURA, LARGURA), BLACK)
+        canvas.pinte_disco(ALTURA//2, LARGURA//2, RAIO//2, WHITE)
+
+        Y = ALTURA//2
+        X = LARGURA//2
+        RAIO_C = 7*RAIO/4
+
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(i*math.pi/60)), X + math.floor(RAIO_C*math.cos(i*math.pi/60)), RAIO//4, WHITE)
+        video.append(canvas)
     mostre = True
     if mostre:
         mostre_video(video)
