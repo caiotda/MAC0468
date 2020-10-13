@@ -222,9 +222,10 @@ class Numpymagem:
         igual a 'raio' modificando a intersecção desse disco com self com o
         valor `valor`.
         """
-
-        for i in range(self.shape[0]):
-            for j in range(self.shape[1]):
+        start_lin = max(lin - raio, 0)
+        start_col = max(col - raio, 0)
+        for i in range(start_lin, self.shape[0]):
+            for j in range(start_col, self.shape[1]):
                 if self.__in_circunference(i, j, lin, col, raio):
                     self.array[i, j] = valor
 
