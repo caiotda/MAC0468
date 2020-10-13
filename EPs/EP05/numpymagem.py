@@ -117,11 +117,11 @@ class Numpymagem:
         conteúdo.
         """
         if type(valor) is np.ndarray:
-            self.array = np.array(valor)
+            self.data = np.array(valor)
             self.shape = valor.shape
         else:
             nlins, ncols = shape
-            self.array = np.full((nlins, ncols), valor)
+            self.data = np.full((nlins, ncols), valor)
             self.shape = (nlins, ncols)
 
     def __str__(self):
@@ -132,7 +132,7 @@ class Numpymagem:
         nlins, ncols = self.shape
         for i in range(nlins):
             for j in range(ncols):
-                s += '%4d '%self.array[i, j]
+                s += '%4d '%self.data[i, j]
             s += '\n'
         return s
 
@@ -142,18 +142,18 @@ class Numpymagem:
         DEVOLVE o pixel com a coordenada especificada pelos dois inteiros
         """
         i, j = key
-        return self.array[i, j]
+        return self.data[i, j]
 
     def __setitem__(self, key, val):
         """(par de inteiros, valor) -> None
         RECEBE um par de inteiros e um valor
         MODIFICA o objeto referenciado por self, modificando
         o pixel referenciado por 'key', trocando seu valor para `val`.
-        O tipo de `val` deve ser o mesmo dos itens armazenados em self.array
+        O tipo de `val` deve ser o mesmo dos itens armazenados em self.data
         """
 
         i, j = key
-        self.array[i, j] = val
+        self.data[i, j] = val
 
     def __add__(self, other):
         """ (Numpymagem) -> Numpymagem
@@ -162,7 +162,7 @@ class Numpymagem:
         consiste na soma de todo pixel (i,j) em self com o pixel (i,j)
         correspondente em other
         """
-        soma = self.array + other.array
+        soma = self.data + other.data
         return Numpymagem((), soma)
 
     def __mul__(self, escalar):
@@ -172,7 +172,7 @@ class Numpymagem:
         consiste na multiplicacção de todo pixel (i,j) em self com pelo escalar
         """
 
-        mul = self.array * escalar
+        mul = self.data * escalar
         return Numpymagem((), mul)
 
     def crop(self,tlx = 0 ,tly = 0, brx = None, bry = None):
@@ -187,7 +187,7 @@ class Numpymagem:
             brx = self.shape[0]
         if bry is None:
             bry = self.shape[1]
-        vetor_cropado = self.array[tlx:brx, tly:bry]
+        vetor_cropado = self.data[tlx:brx, tly:bry]
         #print(f"vetor cropado: {vetor_cropado}")
         return Numpymagem((), vetor_cropado)
 
@@ -212,8 +212,8 @@ class Numpymagem:
         ncols = bry - tly + 1
         
         intersect = other.crop(tlx_intersect, tly_intersect, nlins, ncols)
-        self.array[tlx:(brx+1 - tlx_intersect),tly :(bry+1 - tly_intersect)] =\
-            intersect.array
+        self.data[tlx:(brx+1 - tlx_intersect),tly :(bry+1 - tly_intersect)] =\
+            intersect.data
 
     def pinte_disco(self, lin, col, raio, valor):
         """ (int, int, int, int) -> None
@@ -227,7 +227,7 @@ class Numpymagem:
         for i in range(start_lin, self.shape[0]):
             for j in range(start_col, self.shape[1]):
                 if self.__in_circunference(i, j, lin, col, raio):
-                    self.array[i, j] = valor
+                    self.data[i, j] = valor
 
     def __in_circunference(self, x, y, a, b, r):
         """ (int, int, int, int, int) -> Bool
