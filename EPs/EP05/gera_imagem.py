@@ -45,10 +45,11 @@ from numpymagem import Numpymagem
 from numpymutil import mostre_video
 from numpymutil import salve_video
 import math
+from random import randint
 
 # Escreva aqui outras constantes que desejar
-ALTURA  = 200
-LARGURA = 320
+ALTURA  = 30
+LARGURA = 40
 BLACK = 0
 WHITE = 250
 
@@ -76,9 +77,23 @@ def main():
     preto = Numpymagem( (ALTURA, LARGURA), BLACK)    
     branco = Numpymagem( (ALTURA, LARGURA), WHITE)
     print(f"Está compatível com numpymutil: {type(preto.data) is np.ndarray}")
-    cor = BLACK
 
-    for i in range(120):
+    FRAMES = 900
+
+    for i in range(FRAMES//3):
+        RAIO = LARGURA // 7
+        canvas = Numpymagem((ALTURA, LARGURA), BLACK)
+        canvas.pinte_disco(ALTURA//2, LARGURA//2,  RAIO//2, WHITE)
+
+        Y = ALTURA//2
+        X = LARGURA//2
+        RAIO_C = 7*RAIO/4
+
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(i*math.pi/60)), X + math.floor(RAIO_C*math.cos(i*math.pi/60)), RAIO//4, WHITE)
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(-i*math.pi/60)), X - math.floor(RAIO_C*math.cos(i*math.pi/60)), RAIO//4, WHITE)
+        video.append(canvas)
+
+    for i in range(FRAMES//3, 2*FRAMES//3):
         RAIO = LARGURA // 7
         canvas = Numpymagem((ALTURA, LARGURA), BLACK)
         canvas.pinte_disco(ALTURA//2, LARGURA//2, RAIO//2, WHITE)
@@ -86,8 +101,24 @@ def main():
         Y = ALTURA//2
         X = LARGURA//2
         RAIO_C = 7*RAIO/4
+        
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(-i*math.pi/60)), X + math.floor(RAIO_C*math.cos(-i*math.pi/60)), RAIO//4, WHITE)
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(i*math.pi/60)), X - math.floor(RAIO_C*math.cos(i*math.pi/60)), RAIO//4, WHITE)
+        video.append(canvas)
+    
+    for i in range(2*FRAMES//3, FRAMES):
+        RAIO = LARGURA // 7
+        canvas = Numpymagem((ALTURA, LARGURA), BLACK)
 
-        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(i*math.pi/60)), X + math.floor(RAIO_C*math.cos(i*math.pi/60)), RAIO//4, WHITE)
+        canvas.pinte_disco(ALTURA//2, LARGURA//2, RAIO//2, WHITE)
+
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(-i*math.pi/60)), X + math.floor(RAIO_C*math.cos(-i*math.pi/60)), RAIO//4, WHITE)
+        canvas.pinte_disco(Y + math.floor(RAIO_C*math.sin(i*math.pi/60)), X - math.floor(RAIO_C*math.cos(i*math.pi/60)), RAIO//4, WHITE)
+        
+        Y = ALTURA//2
+        X = LARGURA//2
+        RAIO_C = 7*RAIO/4
+
         video.append(canvas)
     mostre = True
     if mostre:
