@@ -66,7 +66,8 @@ def main():
         return
 
     # resto do seu programa
-    
+    cv.imshow("Entrada", img1)
+    cv.waitKey(0)
 if __name__== '__main__':
     main()
 
