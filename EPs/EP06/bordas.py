@@ -83,7 +83,11 @@ def main():
     cv.imshow("Cinza", img_cinza)
     cv.waitKey(0)
 
-    blurred = cv.GaussianBlur(img_cinza, (gaussian_kernel_size, gaussian_kernel_size), 0)
+    # Imagem borrada. Adicionamos um trackbar e sempre que há um evento de 
+    # mudança no valor da trackbar, alteramos a imagem.
+    blurred = \
+        cv.GaussianBlur\
+            (img_cinza, (gaussian_kernel_size, gaussian_kernel_size), 0)
     cv.imshow("blur", blurred)
     cv.createTrackbar("blurTrackbar", "blur", 3, 15, on_trackbar)
     cv.waitKey(0)
