@@ -68,6 +68,12 @@ def main():
     # resto do seu programa
     cv.imshow("Entrada", img1)
     cv.waitKey(0)
+
+    # Imagem em tons de cinza
+
+    cinza = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
+    cv.imshow("Cinza", cinza)
+    cv.waitKey(0)
 if __name__== '__main__':
     main()
 
