@@ -47,8 +47,16 @@ import sys
 
 #-------------------------------------------------------------------------- 
 # global vars
-
+global gaussian_kernel_size
+gaussian_kernel_size = 3
 #-------------------------------------------------------------------------- 
+
+def on_trackbar(valor):
+    gaussian_kernel_size = 2*valor + 1 # O tamanho do kernel não pode ser multiplo de dois
+    blurred = \
+    cv.GaussianBlur(img_cinza, (gaussian_kernel_size, gaussian_kernel_size), 0)
+    cv.imshow("blur", blurred)
+
 # programa principal
 
 def main():
@@ -71,8 +79,13 @@ def main():
 
     # Imagem em tons de cinza
 
-    cinza = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
-    cv.imshow("Cinza", cinza)
+    img_cinza = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
+    cv.imshow("Cinza", img_cinza)
+    cv.waitKey(0)
+
+    blurred = cv.GaussianBlur(img_cinza, (gaussian_kernel_size, gaussian_kernel_size), 0)
+    cv.imshow("blur", blurred)
+    cv.createTrackbar("blurTrackbar", "blur", 3, 15, on_trackbar)
     cv.waitKey(0)
 if __name__== '__main__':
     main()
