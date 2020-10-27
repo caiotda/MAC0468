@@ -84,16 +84,22 @@ def main():
         fname = sys.argv[1]
         img   = cv.imread(fname)
         ddepth= cv.CV_16S
+        
+        # Converte imagem para tons de cinza e aplica um filtro de cinza 
+        # Antes de aplicar o filtro de sobel.
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         gray = cv.GaussianBlur(gray, (9, 9), 0)
 
+        # Monta filtro de sobel para cada direção.
         grad_x = cv.Sobel(gray, ddepth, 1, 0, ksize=3, scale=1, delta=0)
         grad_y = cv.Sobel(gray, ddepth, 0, 1, ksize=3, scale=1, delta=0)
         
+        #Converte para valores absolutos
         abs_grad_x = cv.convertScaleAbs(grad_x)
         abs_grad_y = cv.convertScaleAbs(grad_y)
 
-
+        # Tomando as componentes verticais e horizontais, tira a intensidade
+        # do gradiente em cada ponto (teorema de pitagoras)
         grad = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
 
         # Aplica filtro de media. Tamano do kernel é blurring_med x blurring_med
