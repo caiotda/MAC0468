@@ -99,7 +99,6 @@ def desenha():
     # com a janela 1, chama a callback trata_mouse
 
     while(True):
-        cv.imshow("janela 1", img1)
         k = cv.waitKey(10)
         if k == 27: #esc
             break
