@@ -86,18 +86,17 @@ def main():
         gab2 = processa_gab(gab2)
         gab3 = processa_gab(gab3)
 
-
+        gab = crie_gabarito([gab1, gab2, gab3])
         if DEBUG:
             cv.imshow("imagem principal", img)
             cv.imshow("imagem gabarito 1", gab1)
             cv.imshow("imagem gabarito 2", gab2)
             cv.imshow("imagem gabarito 3", gab3)
 
+            cv.imshow("Combinação dos gabaritos", gab)
+            cv.waitKey(0)
 
 
-        gab = crie_gabarito([gab1, gab2, gab3])
-        cv.imshow("Soma dos gabaritos", gab)
-        cv.waitKey(0)
     
         
 
