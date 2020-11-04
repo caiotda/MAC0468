@@ -47,9 +47,12 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+import matplotlib
+matplotlib.use('TkAgg')
+
 ## Constantes
 FUNDO = 0
-DEBUG = True
+DEBUG = False
 
 
 def tenta_abrir(caminho):
@@ -103,7 +106,8 @@ def main():
             cv.waitKey(0)
 
 
-        arr = avalie_canny(blur, gab)
+        coords = avalie_canny(blur, gab)
+        mostre_resultado(coords)
 
     
         
@@ -145,6 +149,30 @@ def avalie_canny(blur, gab, ini=0, fim=256, passo=5, delta=60):
     A função retorna um numpy.ndarray com os pares (recall, precision)
     para cada par de limiares calculados.
     '''
+    img = cv.Canny(blur, 0, delta)
+    cv.imshow("Canny", img)
+    cv.imshow("Gabarito", gab)
+    cv.waitKey(0)
+
+    data = []
+
+    for inicio in range(ini, fim, passo ):
+        img = cv.Canny(blur, inicio, inicio + delta)
+        
+        comparacao = np.subtract(img.astype(np.int16), gab.astype(np.int16))
+        intersecta = cv.bitwise_and(img, gab)
+        print(intersecta)
+        FP = np.sum(comparacao == 255)
+        FN = np.sum(comparacao == -255)
+        TP = np.sum(intersecta == 255)
+
+        precision = TP / (TP + FN)
+        recall = TP / (TP + FP)
+
+        data.append((recall, precision))
+    return np.array(data)
+
+        
 
 if __name__ == '__main__':
     main()
