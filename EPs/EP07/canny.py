@@ -106,7 +106,18 @@ def crie_gabarito( imgs ):
     ''' (lista de imagens) -> imagem
     Constrói a imagem gabarito a partir de uma lista de imagens com
     anotações de bordas.
-    ''' 
+    '''
+
+    shape = imgs[0].shape
+    print(shape)
+
+    background = 255*np.ones(shape=shape, dtype=np.uint8)
+    print(background)
+    for img in imgs:
+       background += img
+    
+    
+    return cv.bitwise_not(background)
 
 def avalie_canny(blur, gab, ini=0, fim=256, passo=5, delta=60):
     ''' (imagem, imagem, int, int, int, int) -> array
