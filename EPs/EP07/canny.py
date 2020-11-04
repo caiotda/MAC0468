@@ -59,6 +59,13 @@ def tenta_abrir(caminho):
     except:
         print(f"Erro ao abrir a imagem de caminho {caminho}")
         return
+
+
+def processa_gab(gab):
+    _, res = cv.threshold(gab, 125, 255, cv.THRESH_BINARY)
+    gray = cv.cvtColor(res, cv.COLOR_BGR2GRAY)
+
+    return gray
 def main():
     ''' 
     Carregue as imagens gere o gráfico Recall x Precision
@@ -74,8 +81,11 @@ def main():
         gab1 = tenta_abrir(sys.argv[2])
         gab2 = tenta_abrir(sys.argv[3])
         gab3 = tenta_abrir(sys.argv[4])
-        
-        gab = crie_gabarito([gab1, gab2, gab3])
+
+        gab1 = processa_gab(gab1)
+        gab2 = processa_gab(gab2)
+        gab3 = processa_gab(gab3)
+
 
         if DEBUG:
             cv.imshow("imagem principal", img)
@@ -83,8 +93,12 @@ def main():
             cv.imshow("imagem gabarito 2", gab2)
             cv.imshow("imagem gabarito 3", gab3)
 
-            cv.imshow("Soma dos gabaritos", gab)
-            cv.waitKey(0)
+
+
+        gab = crie_gabarito([gab1, gab2, gab3])
+        cv.imshow("Soma dos gabaritos", gab)
+        cv.waitKey(0)
+    
         
 
 
