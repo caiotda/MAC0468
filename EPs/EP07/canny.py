@@ -47,15 +47,17 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-import matplotlib
-matplotlib.use('TkAgg')
-
 ## Constantes
 FUNDO = 0
 DEBUG = False
 
 
 def tenta_abrir(caminho):
+    """ (string) -> imagem
+    RECEBE uma string contendo o caminho relativo de uma imagem
+    DEVOLVE a imagem correspondente se o caminho resultar em um arquivo de imagem
+    retorna uma exceção se a imagem não existir
+    """
     try:
         img = cv.imread(caminho)
         return img
@@ -65,6 +67,11 @@ def tenta_abrir(caminho):
 
 
 def processa_gab(gab):
+    """ (imagem) -> imagem
+    RECEBE uma imagem de gabarito e 
+    DEVOLVE a imagem de gabarito em tons de cinza e limiarizada. Fazemos isso
+    para evitar eventuais ruidos na imagem de gabarito.
+    """
     gray = cv.cvtColor(gab, cv.COLOR_BGR2GRAY)
     _, res = cv.threshold(gray, 125, 255, cv.THRESH_BINARY_INV)
 
@@ -150,20 +157,30 @@ def avalie_canny(blur, gab, ini=0, fim=256, passo=5, delta=60):
     para cada par de limiares calculados.
     '''
     img = cv.Canny(blur, 0, delta)
-    cv.imshow("Canny", img)
-    cv.imshow("Gabarito", gab)
-    cv.waitKey(0)
 
     data = []
 
-    for inicio in range(ini, fim, passo ):
+    for inicio in range(ini, fim - delta, passo ):
         img = cv.Canny(blur, inicio, inicio + delta)
         
+        # Vamos lidar com valores entre -255 e +255, para tanto, precisamos
+        # converter o tipo de dados para 16 bits.
         comparacao = np.subtract(img.astype(np.int16), gab.astype(np.int16))
+
+        # Verifica regiões que são borda tanto na imagem de entrada quanto no 
+        # gabarito
         intersecta = cv.bitwise_and(img, gab)
-        print(intersecta)
+
+        # Seleciona todo pixel (i,j) que é 255 em img e 0 no gabarito
+        # (falso positivo)
         FP = np.sum(comparacao == 255)
+
+        # Aqui, pegamos pixels que são 0 na img e 255 no gabarito
+        # (falso negativo)
         FN = np.sum(comparacao == -255)
+
+        # Finalmente, pixels que são 255 tanto na imagem quando no gabarito
+        # (positivos verdadeiros)
         TP = np.sum(intersecta == 255)
 
         precision = TP / (TP + FN)
