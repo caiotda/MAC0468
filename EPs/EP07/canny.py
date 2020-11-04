@@ -87,15 +87,23 @@ def main():
         gab3 = processa_gab(gab3)
 
         gab = crie_gabarito([gab1, gab2, gab3])
+        blur = cv.GaussianBlur(img, (5, 5), 0)
+
+        borda = cv.Canny(blur, 60, 120)
+
         if DEBUG:
             cv.imshow("imagem principal", img)
             cv.imshow("imagem gabarito 1", gab1)
             cv.imshow("imagem gabarito 2", gab2)
             cv.imshow("imagem gabarito 3", gab3)
 
-            cv.imshow("Combinação dos gabaritos", gab)
+            cv.imshow("Combinacao dos gabaritos", gab)
+            cv.imshow("Imagem borrada", blur)
+            cv.imshow("Imagem segmentada por canny", borda)
             cv.waitKey(0)
 
+
+        arr = avalie_canny(blur, gab)
 
     
         
