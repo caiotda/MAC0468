@@ -159,7 +159,6 @@ def avalie_canny(blur, gab, ini=0, fim=256, passo=5, delta=60):
     img = cv.Canny(blur, 0, delta)
 
     data = []
-
     for inicio in range(ini, fim - delta, passo ):
         img = cv.Canny(blur, inicio, inicio + delta)
         
@@ -183,10 +182,10 @@ def avalie_canny(blur, gab, ini=0, fim=256, passo=5, delta=60):
         # (positivos verdadeiros)
         TP = np.sum(intersecta == 255)
 
-        precision = TP / (TP + FN)
-        recall = TP / (TP + FP)
+        recall = TP / (TP + FN)
+        precision = TP / (TP + FP)
 
-        data.append((recall, precision))
+        data.append((precision, recall))
     return np.array(data)
 
         
