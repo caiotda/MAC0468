@@ -42,19 +42,52 @@
 '''
 
 ##
-import cv2
+import cv2 as cv
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
 ## Constantes
 FUNDO = 0
-DEBUG = False
+DEBUG = True
 
+
+def tenta_abrir(caminho):
+    try:
+        img = cv.imread(caminho)
+        return img
+    except:
+        print(f"Erro ao abrir a imagem de caminho {caminho}")
+        return
 def main():
     ''' 
     Carregue as imagens gere o gráfico Recall x Precision
     '''
+
+    if len(sys.argv) < 5:
+        print('Quantidade de argumentos passada incorreta. Para executar o programa corretamente, digite:\
+                \
+                python imagem gabarito1 gabarito2 gabarito3')
+        return
+    else:
+        img = tenta_abrir(sys.argv[1])
+        gab1 = tenta_abrir(sys.argv[2])
+        gab2 = tenta_abrir(sys.argv[3])
+        gab3 = tenta_abrir(sys.argv[4])
+        
+        gab = crie_gabarito([gab1, gab2, gab3])
+
+        if DEBUG:
+            cv.imshow("imagem principal", img)
+            cv.imshow("imagem gabarito 1", gab1)
+            cv.imshow("imagem gabarito 2", gab2)
+            cv.imshow("imagem gabarito 3", gab3)
+
+            cv.imshow("Soma dos gabaritos", gab)
+            cv.waitKey(0)
+        
+
+
 ## 
 
 def mostre_resultado( array ):
