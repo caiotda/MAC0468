@@ -62,10 +62,10 @@ def tenta_abrir(caminho):
 
 
 def processa_gab(gab):
-    _, res = cv.threshold(gab, 125, 255, cv.THRESH_BINARY)
-    gray = cv.cvtColor(res, cv.COLOR_BGR2GRAY)
+    gray = cv.cvtColor(gab, cv.COLOR_BGR2GRAY)
+    _, res = cv.threshold(gray, 125, 255, cv.THRESH_BINARY_INV)
 
-    return gray
+    return res
 def main():
     ''' 
     Carregue as imagens gere o gráfico Recall x Precision
@@ -122,16 +122,11 @@ def crie_gabarito( imgs ):
     anotações de bordas.
     '''
 
-    shape = imgs[0].shape
-    print(shape)
 
-    background = 255*np.ones(shape=shape, dtype=np.uint8)
-    print(background)
-    for img in imgs:
-       background += img
+    gab1, gab2, gab3 = imgs
+    res = cv.bitwise_or(gab1, gab2)
+    return cv.bitwise_or(res, gab3)
     
-    
-    return cv.bitwise_not(background)
 
 def avalie_canny(blur, gab, ini=0, fim=256, passo=5, delta=60):
     ''' (imagem, imagem, int, int, int, int) -> array
