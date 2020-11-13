@@ -1,0 +1,137 @@
+% MODELO PARA SER USADO NOS RELATÓRIOS
+
+\documentclass[10pt,a4paper,twocolumn]{article} % 10pt font size (11 and 12 also possible), A4 paper (letterpaper for US letter) and two column layout (remove for one column)
+
+\usepackage[brazil]{babel} % escrevendo em português
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage{hyperref}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages for equations
+\usepackage{graphicx} % Required for adding images
+
+\usepackage{geometry} % Required for adjusting page dimensions
+
+\geometry{
+	top=1cm, % Top margin
+	bottom=1.5cm, % Bottom margin
+	left=2cm, % Left margin
+	right=2cm, % Right margin
+	%includehead, % Include space for a header
+	%includefoot, % Include space for a footer
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+\setlength{\columnsep}{7mm} % Column separation width
+
+%----------------------------------------------------------------------------------------
+%	Relatório: cabeçalho
+%----------------------------------------------------------------------------------------
+
+\title{Modelo para escrever o seu relatório} 
+
+\author{  SEU NOME E CO-AUTORES\\
+    Laboratório de Visão Computacional - IME - USP\\
+}
+\date{}
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the title
+
+%\thispagestyle{empty} % Apply the page style for the first page (no headers and footers)
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+    Escreva aqui um resumo geral do relatório descrevendo o problema,
+    os objetivos, a solução, a metodologia de avaliação, e os principais resultados.
+    Esse resumo deve conter não mais que 1000 caracteres.
+    O relatório inteiro deve ter 2 páginas, incluindo figuras, tabelas, etc.
+    Você pode incluir uma 3a página contendo apenas referências bibliográficas.
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	CONTEÚDO
+%----------------------------------------------------------------------------------------
+
+\section{Introdução}
+
+Você pode usar o \href{https://www.overleaf.com}{Overleaf} para criar e compilar seus relatórios online. Caso você nunca tenha usado \LaTeX{} dê uma olhada \href{https://www.overleaf.com/learn}{nesse link}.
+
+Esse é um exemplo de como incluir uma citação em seu texto \cite{Ref1}. Não deixe de ler sobre o \href{https://www.ctan.org/pkg/}{biblatex}~\cite{Biblatex}. Veja o arquivo example.bib para incluir suas referências.
+
+Esse é um exemplo de expressão matemática:
+
+\begin{equation}
+	A = 
+	\begin{bmatrix}
+		A_{11} & A_{21} \\
+		A_{21} & A_{22}
+	\end{bmatrix}
+\end{equation}
+
+%------------------------------------------------
+% Use % para seus comentários
+%
+
+\subsection{Subseção}
+
+Você pode usar subseções, mas lembre-se de limitar seu relatório a 2 páginas.
+
+O itemize é útil para listar elementos.
+
+\begin{itemize}
+	\item item 1 da lista
+	\item segundo 
+	\item mais um
+\end{itemize}
+
+Assim como o enumerate:
+\begin{enumerate}
+	\item item 1 do enumerate
+	\item outro
+	\item mais um
+\end{enumerate}
+
+Tabelas como a tabela~\ref{tab:Tabela1} podem ser muito importantes em um relatório:
+
+\begin{table}[hbt]
+	\centering
+    \begin{tabular}{ll|r}\hline
+        coluna 1 & coluna 2 & total \\\hline
+        x & y & z\\
+        1 & 2 & 3\\
+    \end{tabular}
+	\caption{Uma tabela}
+    \label{tab:Tabela1}
+\end{table}
+
+%------------------------------------------------
+
+\section{Use figuras!}
+
+Assim se cria uma referência (no caso para a figura) \ref{fig:gato}.
+
+\begin{figure}
+	\includegraphics[width=0.9\linewidth]{cat011.png} % Figure image
+	\caption{Gatinho} % Figure caption
+	\label{fig:gato} % Label for referencing with \ref{bear}
+\end{figure}
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+    \bibitem{Ref1} \emph{First and last \LaTeX{} example.},
+    John Doe 50 B.C. 
+    \bibitem{Biblatex} \emph{Não deixe de ver sobre o biblatex.} \href{https://www.ctan.org/pkg/}{biblatex}. 
+\end{thebibliography}
+    
+%----------------------------------------------------------------------------------------
+
+\end{document}
