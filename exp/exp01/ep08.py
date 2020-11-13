@@ -51,11 +51,11 @@ import exp01_utils as ut
 ## Edite essas constantes para o seu ambiente
 CJTO_TREINO = 'treinamento.txt'
 CJTO_TESTE  = 'teste.txt'
-DATA_PATH   = '../dataset/'
+DATA_PATH   = './dataset/'
 
 ## Outras constantes
 FUNDO = 0
-DEBUG = False
+DEBUG = True
 TREINO = True
 USE_BORDAS_BASELINE = True
 

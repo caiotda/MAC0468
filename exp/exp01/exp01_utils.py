@@ -5,6 +5,9 @@ cálculo dos limiares para o método e Canny.
 import cv2
 import matplotlib.pyplot as plt
 
+from ep08 import crie_gabarito, prec_rec
+DEBUG = 0
+
 ##  -----------------------------------------------------------------
 
 def mostre_resultado( d ):
