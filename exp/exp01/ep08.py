@@ -68,8 +68,7 @@ def bordas2( img ):
     binária com fundo FUNDO.    
     '''
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    blur  = cv.GaussianBlur(gray, (5, 5), 0)
-    img = cv.Canny(blur, bottom_threshold, bottom_threshold + DELTA)
+    img = cv.Canny(gray, bottom_threshold, bottom_threshold + delta)
 
     return img
 
