@@ -57,9 +57,8 @@ DATA_PATH   = './dataset/'
 FUNDO = 0
 DEBUG = False
 TREINO = True
-USE_BORDAS_BASELINE = True
+USE_BORDAS_BASELINE = False
 
-BOTTOM_THRESHOLD = 0
 DELTA = 60
 
 def bordas2( img ):
@@ -70,7 +69,7 @@ def bordas2( img ):
     '''
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     blur  = cv.GaussianBlur(gray, (5, 5), 0)
-    img = cv.Canny(blur, 60, 120)
+    img = cv.Canny(blur, bottom_threshold, bottom_threshold + DELTA)
 
     return img
 
@@ -78,6 +77,9 @@ def main():
     ''' 
     Programa para ajudar no treinamento e teste da sua função bordas
     '''
+    global bottom_threshold
+    bottom_threshold = 0
+    results = {}
 
     # modifique a constante para False para usar a sua função bordas
     if USE_BORDAS_BASELINE:
@@ -87,9 +89,21 @@ def main():
 
     # ao terminar o seu treino com a sua função bordas, 
     # altera a constante TREINO para False
+    TREINO = True
     if TREINO:
-        f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
+        for inicio in range(0, 256 - DELTA, 5): #ini, fim, passo:
+            print('-----------------------------------------------------------')
+            bottom_threshold = inicio
+            f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
+            results[bottom_threshold] = f #fscore medio
+        bottom_threshold = max(results, key=results.get)
+        # Essa abordagem seleciona o f maximo so pra ultima iteração,e diz que esse 
+        # é o melhor threshold. O que eu deveria fazer seria considerar todas as baterias
+        # de treino pra escolher o melhor threshold. Quero escolher o que foi consistentemente
+        # melhor
+        TREINO = False
     else:
+        print('Avaliando!')
         f, s = ut.avaliacao( CJTO_TESTE, DATA_PATH, bordas)
 
     for i in sorted(s.keys()):
