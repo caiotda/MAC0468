@@ -6,7 +6,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 from ep08 import crie_gabarito, prec_rec
-DEBUG = 0
+DEBUG = True
 
 ##  -----------------------------------------------------------------
 
