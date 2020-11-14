@@ -55,9 +55,24 @@ DATA_PATH   = './dataset/'
 
 ## Outras constantes
 FUNDO = 0
-DEBUG = True
+DEBUG = False
 TREINO = True
 USE_BORDAS_BASELINE = True
+
+BOTTOM_THRESHOLD = 0
+DELTA = 60
+
+def bordas2( img ):
+    ''' ( BGR ) -> binária
+    Implemente aqui o seu método para calcular valores para os limiares
+    de Canny. A função deve aplicar esses valores e retornar uma imagem
+    binária com fundo FUNDO.    
+    '''
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    blur  = cv.GaussianBlur(gray, (5, 5), 0)
+    img = cv.Canny(blur, 60, 120)
+
+    return img
 
 def main():
     ''' 
@@ -67,6 +82,8 @@ def main():
     # modifique a constante para False para usar a sua função bordas
     if USE_BORDAS_BASELINE:
         bordas = ut.bordas_baseline
+    else:
+        bordas = bordas2
 
     # ao terminar o seu treino com a sua função bordas, 
     # altera a constante TREINO para False
@@ -86,16 +103,15 @@ def main():
 ##  Copie ou adapte algumas delas do EP07.
 ##
 ##  -----------------------------------------------------------------
+def processa_gab(gab):
+    """ (imagem) -> imagem
+    RECEBE uma imagem de gabarito e 
+    DEVOLVE a imagem de gabarito limiarizada e com fundo preto. Fazemos isso
+    para evitar eventuais ruidos na imagem de gabarito.
+    """
+    _, res = cv.threshold(gab, 125, 255, cv.THRESH_BINARY_INV)
 
-def bordas( img ):
-    ''' ( BGR ) -> binária
-    Implemente aqui o seu método para calcular valores para os limiares
-    de Canny. A função deve aplicar esses valores e retornar uma imagem
-    binária com fundo FUNDO.    
-    '''
-
-    print("Vixe! ainda não implementei a função bordas ;-(")
-
+    return res
 ##  -----------------------------------------------------------------
 
 def crie_gabarito( imgs ):
@@ -103,13 +119,14 @@ def crie_gabarito( imgs ):
     Constrói a imagem gabarito a partir de uma lista de imagens com
     anotações de bordas.
     '''
-    #for img in imgs: TODO: versão mais geral, carece de mais testes
-    #    res = cv.bitwise_or(res, img)
-    #return res
-    output = imgs[0]
-    for i in range(1, len(imgs)):
-        output = cv.bitwise_or(output, imgs[i])
-    return output
+    gab1, gab2, gab3 = imgs
+
+    gab1 = processa_gab(gab1)
+    gab2 = processa_gab(gab2)
+    gab3 = processa_gab(gab3)
+    res = cv.bitwise_or(gab1, gab2)
+    res =  cv.bitwise_or(res, gab3)
+    return res
 ##  -----------------------------------------------------------------
 
 def prec_rec(teste, gabarito):
