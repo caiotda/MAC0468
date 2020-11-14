@@ -77,8 +77,10 @@ def main():
     Programa para ajudar no treinamento e teste da sua função bordas
     '''
     global bottom_threshold
+    global delta
+    delta = 0
     bottom_threshold = 0
-    results = {}
+    resultados = {}
 
     # modifique a constante para False para usar a sua função bordas
     if USE_BORDAS_BASELINE:
@@ -90,24 +92,31 @@ def main():
     # altera a constante TREINO para False
     TREINO = True
     if TREINO:
-        for inicio in range(0, 256 - DELTA, 5): #ini, fim, passo:
-            print('-----------------------------------------------------------')
-            bottom_threshold = inicio
-            f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
-            results[bottom_threshold] = f #fscore medio
-        bottom_threshold = max(results, key=results.get)
-        # Essa abordagem seleciona o f maximo so pra ultima iteração,e diz que esse 
-        # é o melhor threshold. O que eu deveria fazer seria considerar todas as baterias
-        # de treino pra escolher o melhor threshold. Quero escolher o que foi consistentemente
-        # melhor
+        i = 1
+        for delta in range(20, 120, 20):
+            print(f"Iteração {i}/5")
+            X = []
+            Y = []
+            for inicio in range(0, 256 - delta, 5): #ini, fim, passo:
+                bottom_threshold = inicio
+                f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
+                resultados[(delta, bottom_threshold)] = f #fscore medio
+                X.append(bottom_threshold)
+                Y.append(f)
+            bottom_threshold = max(resultados, key=resultados.get)
+            print(f"Melhor threshold para delta = {delta}: {resultados[bottom_threshold]}")
+            i += 1
         TREINO = False
+        bottom_threshold = max(resultados, key=resultados.get)
+        print(f"Melhor resultado: {resultados[bottom_threshold]} com parametros{bottom_threshold}")
+
     else:
         print('Avaliando!')
         f, s = ut.avaliacao( CJTO_TESTE, DATA_PATH, bordas)
-
     for i in sorted(s.keys()):
         print(f"{s[i]:.3} \t: {i}")
     print(f"{f:.3} \t: F-score médio")
+    print(f"stdev do F-score: {np.array(list(s.values())).std()}")
     ut.mostre_resultado( s )
 
 ##  -----------------------------------------------------------------
