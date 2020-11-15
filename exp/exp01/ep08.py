@@ -56,10 +56,11 @@ DATA_PATH   = './dataset/'
 ## Outras constantes
 FUNDO = 0
 DEBUG = False
-TREINO = True
+TREINO = False
+APRENDENDO = False
+
 USE_BORDAS_BASELINE = False
 
-DELTA = 60
 
 def bordas2( img ):
     ''' ( BGR ) -> binária
@@ -68,7 +69,8 @@ def bordas2( img ):
     binária com fundo FUNDO.    
     '''
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    img = cv.Canny(gray, bottom_threshold, bottom_threshold + delta)
+    blur = cv.GaussianBlur(gray, (5, 5), 0)
+    img = cv.Canny(blur, bottom_threshold, bottom_threshold + delta)
 
     return img
 
@@ -78,8 +80,8 @@ def main():
     '''
     global bottom_threshold
     global delta
-    delta = 0
-    bottom_threshold = 0
+    delta = 20
+    bottom_threshold = 75
     resultados = {}
 
     # modifique a constante para False para usar a sua função bordas
@@ -90,26 +92,16 @@ def main():
 
     # ao terminar o seu treino com a sua função bordas, 
     # altera a constante TREINO para False
-    TREINO = True
     if TREINO:
-        i = 1
-        for delta in range(20, 120, 20):
-            print(f"Iteração {i}/5")
-            X = []
-            Y = []
-            for inicio in range(0, 256 - delta, 5): #ini, fim, passo:
-                bottom_threshold = inicio
-                f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
-                resultados[(delta, bottom_threshold)] = f #fscore medio
-                X.append(bottom_threshold)
-                Y.append(f)
-            bottom_threshold = max(resultados, key=resultados.get)
-            print(f"Melhor threshold para delta = {delta}: {resultados[bottom_threshold]}")
-            i += 1
-        TREINO = False
-        bottom_threshold = max(resultados, key=resultados.get)
-        print(f"Melhor resultado: {resultados[bottom_threshold]} com parametros{bottom_threshold}")
-
+        if APRENDENDO:
+            for delta in range(20, 120, 20):
+                for inicio in range(0, 256 - delta, 5): #ini, fim, passo:
+                    bottom_threshold = inicio
+                    f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
+                    resultados[(delta, bottom_threshold)] = f #fscore medio
+                bottom_threshold = max(resultados, key=resultados.get)
+        else:
+            f, s = ut.avaliacao( CJTO_TREINO, DATA_PATH, bordas)
     else:
         print('Avaliando!')
         f, s = ut.avaliacao( CJTO_TESTE, DATA_PATH, bordas)

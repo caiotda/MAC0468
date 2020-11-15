@@ -6,7 +6,8 @@ import cv2
 import matplotlib.pyplot as plt
 
 from ep08 import crie_gabarito, prec_rec
-DEBUG = True
+DEBUG = False
+VERBOSE = False
 
 ##  -----------------------------------------------------------------
 
@@ -64,8 +65,9 @@ def avaliacao( fname, path, bordas=bordas_baseline ):
 
             campos = lin.split()
             nome = path+campos[0]
-
-            print("Criando o gabarito para ", nome)
+            
+            if VERBOSE:
+                print("Criando o gabarito para ", nome)
             lgabs = []
             for i in [1,2,3]:
                 fname = f'{nome} ({i}).jpg'
@@ -78,7 +80,8 @@ def avaliacao( fname, path, bordas=bordas_baseline ):
                 cv2.imshow("GABARITO", gab*50)
                 cv2.waitKey()
 
-            print("Avaliando a imagem", nome)
+            if VERBOSE:
+                print("Avaliando a imagem", nome)
             img = cv2.imread( nome+'.jpg' )
             if DEBUG:
                 cv2.imshow("Teste", img)
