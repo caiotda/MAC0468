@@ -5,23 +5,23 @@ def capture ( cap ):
     # Captura video quadro a quadro
     _, frame = cap.read()
     cinza = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    blur = cv.GaussianBlur(cinza,(15,15), 0)
+    blur = cv.GaussianBlur(cinza,(5,5), 0)
     
     return blur
 
 def main():
     cap = cv.VideoCapture(0)
     fundo = capture(cap)
-    alfa = 0.5
-    limiar = 200
+    alfa = 0.95
+    limiar = 50
     # Na minha maquina isso da problema... acho que problema
     # é a aminha camera que demora pra captar luz
 
     while(True):
         cinza = capture(cap)
-        sub = (np.abs(cinza - fundo) > limiar).astype('uint8')
-        sub = cv.normalize(sub, sub, 0, 255, norm_type=cv.NORM_MINMAX, dtype=cv.CV_8UC1)
-        fundo = alfa * fundo + (1-alfa) * fundo
+        sub = ( (np.abs(cinza - fundo) > limiar) * 255).astype('uint8')
+        #sub = cv.normalize(sub, sub, 0, 255, norm_type=cv.NORM_MINMAX, dtype=cv.CV_8UC1)
+        fundo = alfa * fundo + (1-alfa) * cinza
         # processamento
         #canny = cv.Canny(cinza, 70, 90)
         # Mostra último quadro
