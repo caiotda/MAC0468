@@ -66,7 +66,17 @@ def seleciona_pontos(event, x, y, flags, param):
             cv.circle(img,(poix,poiy),3,255,-1)
             cv.imshow("Selecione Cantos", img)        
         quant += 1
-        print(f"Selecionados: {selecionados}. Quantidade: {quant}")
+
+        if quant == 4:
+            print(selecionados)
+            selecionados.sort(key=lambda sel: sel[0])
+            l = sorted([selecionados[0], selecionados[1]], key=lambda sel: sel[1])
+            r = sorted([selecionados[2], selecionados[3]], key=lambda sel: sel[1])
+            bl, tl = l
+            br, tr = r
+            selecionados = [tl, tr, br, bl]
+
+
 
 
 def captura_imagem():
