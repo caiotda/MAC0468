@@ -76,6 +76,24 @@ def seleciona_pontos(event, x, y, flags, param):
             tr, br = r
             selecionados = [tl, tr, br, bl]
 
+            altura_esq = abs(tl[1] - bl[1])
+            altura_dir = abs(tr[1] - br[1])
+            altura_media = (altura_esq + altura_dir)//2
+
+            largura_sup = abs(tl[0] - tr[0])
+            largura_inf = abs(bl[0] - br[0])
+            largura_media = (largura_sup + largura_inf)//2
+            
+            pontos_perspectiva = np.float32([(0, 0), (largura_media, 0), (largura_media, altura_media), (0, altura_media)])
+            selecionados = np.float32(selecionados)
+
+            M = cv.getPerspectiveTransform(selecionados,pontos_perspectiva)
+            dst = cv.warpPerspective(original,M,(largura_media, altura_media))
+            cv.imshow("Document", dst)
+
+
+
+
 
 
 
@@ -104,10 +122,11 @@ def captura_imagem():
     return img
 
 def main():
-    global selecionados, quant, rois, corners, img
+    global selecionados, quant, rois, corners, img, original
     selecionados = []
     quant = 0
     img = captura_imagem()
+    original = np.copy(img)
     if img is None:
         print("Erro na abertura da imagem.")
 
