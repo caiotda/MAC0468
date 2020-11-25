@@ -7,8 +7,8 @@
 
 '''
 
-    Nome:
-    NUSP:
+    Nome: Caio Túlio de Deus Andrade
+    NUSP: 9797232
 
     Ao preencher esse cabeçalho com o meu nome e o meu número USP,
     declaro que todas as partes originais desse exercício programa (EP)
@@ -45,9 +45,41 @@
 #-------------------------------------------------------------------------- 
 # programa principal
 
+import cv2 as cv
+import numpy as np
+import sys
+
+def captura_imagem():
+    """
+    (None) -> img/None
+
+    DEVOLVE uma imagem openCv, ou None se não conseguir carregar a imagem. 
+    Dependendo dos parametros especificados pela linha de comando, devolve uma 
+    captura de uma câmera ou de uma imagem especificada na linha de comando.
+    """
+    if len(sys.argv) < 2:
+        device = input('Digite o número dequal câmera você quer usar: ')
+        try:
+            num = int(device)
+            print(f'Voce escolheu a camera {num}')
+            camera = cv.VideoCapture(num)
+            _, img = camera.read()
+            cv.waitKey(0)
+        except:
+            print('Erro na escolha do device... digite um numero')
+            return None
+    else:
+        path = sys.argv[1]
+        img = cv.imread(path)
+    return img
+
 def main():
 
-    print("Vixe! ainda não fiz o EP09 ;-(")
+    img = captura_imagem()
+    if img is None:
+        print("Erro na abertura da imagem.")
+    cv.imshow("Entrada", img)
+    cv.waitKey(0)
     
 if __name__== '__main__':
     main()
