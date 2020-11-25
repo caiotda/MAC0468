@@ -72,8 +72,8 @@ def seleciona_pontos(event, x, y, flags, param):
             selecionados.sort(key=lambda sel: sel[0])
             l = sorted([selecionados[0], selecionados[1]], key=lambda sel: sel[1])
             r = sorted([selecionados[2], selecionados[3]], key=lambda sel: sel[1])
-            bl, tl = l
-            br, tr = r
+            tl, bl = l
+            tr, br = r
             selecionados = [tl, tr, br, bl]
 
 
