@@ -49,6 +49,26 @@ import cv2 as cv
 import numpy as np
 import sys
 
+def seleciona_pontos(event, x, y, flags, param):
+    global selecionados, quant, corners, img
+    if event == cv.EVENT_LBUTTONDOWN and quant < 4:
+        poix, poiy = x,y
+        for corner in corners:
+            xc, yc = corner.ravel()
+            if abs(x - xc) <= 3 and abs(y - yc) <= 3:
+                poix, poiy = xc, yc
+                cv.circle(img,(poix,poiy), 5,(0, 0, 255), -1)
+                cv.imshow("Selecione Cantos", img)
+                selecionados.append((poix, poiy))
+                break
+        if (poix, poiy) not in selecionados:
+            selecionados.append((poix, poiy))
+            cv.circle(img,(poix,poiy),3,255,-1)
+            cv.imshow("Selecione Cantos", img)        
+        quant += 1
+        print(f"Selecionados: {selecionados}. Quantidade: {quant}")
+
+
 def captura_imagem():
     """
     (None) -> img/None
@@ -58,7 +78,7 @@ def captura_imagem():
     captura de uma câmera ou de uma imagem especificada na linha de comando.
     """
     if len(sys.argv) < 2:
-        device = input('Digite o número dequal câmera você quer usar: ')
+        device = input('Digite o número de qual câmera você quer usar: ')
         try:
             num = int(device)
             print(f'Voce escolheu a camera {num}')
@@ -74,7 +94,9 @@ def captura_imagem():
     return img
 
 def main():
-
+    global selecionados, quant, rois, corners, img
+    selecionados = []
+    quant = 0
     img = captura_imagem()
     if img is None:
         print("Erro na abertura da imagem.")
@@ -86,6 +108,8 @@ def main():
         x,y = i.ravel()
         cv.circle(img,(x,y),3,255,-1)
     cv.imshow("Selecione Cantos", img)
+    
+    cv.setMouseCallback("Selecione Cantos", seleciona_pontos)
     cv.waitKey(0)
     
 if __name__== '__main__':
