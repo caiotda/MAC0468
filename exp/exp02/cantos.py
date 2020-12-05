@@ -47,6 +47,7 @@
 
 import cv2 as cv
 import numpy as np
+from matplotlib import pyplot as plt
 
 import pandas as pd
 
@@ -107,7 +108,6 @@ def seleciona_pontos(event, x, y, flags, param):
                     (0, altura_media)])
             selecionados = np.float32(selecionados)
             quant = 0
-            selecionados = []
 
 
 def extrai_matriz_homografia(row):
@@ -152,8 +152,10 @@ def calcula_score(csv):
 
     acc = 0
     total = 0
-    for _, row in csv.iterrows():
-        n = 0
+    y_shi = []
+    y_sub = []
+    x_ambos = []
+    for i, row in csv.iterrows():
         # Itera as linhas da tabela
         selecionados = []
         #M = extrai_matriz_homografia(row)
@@ -165,26 +167,57 @@ def calcula_score(csv):
         cv.waitKey(0)
         print(selecionados)
         gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
+        corners_shi = cv.goodFeaturesToTrack(gray,100,0.01,7)
+        proximos_shi = [20, 20, 20, 20]
+        proximos_sub = [20, 20, 20, 20]
+
+
         corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
-        for c in corners:
-            for p in selecionados:
-                if  cv.norm(p - c, cv.NORM_L2) < 20:
+
+        winSize = (5, 5)
+        zeroZone = (-1, -1)
+        criteria = (cv.TERM_CRITERIA_EPS + cv.TermCriteria_COUNT, 40, 0.001)
+        corners_subpix = cv.cornerSubPix(gray, corners, winSize, zeroZone, criteria)
+
+        for idx, p in enumerate(selecionados):
+            for c in corners_shi:
+                dist = cv.norm(p - c, cv.NORM_L2)
+                if  dist < 20 and dist < proximos_shi[idx]:
                     #Verifica se o ponto está numa distancia de 20 pixels
-                    n += 1
-                    acc += 1
-                total += 1
-        print(f"Para a imagem {row['entrada']} eu tive {n} pontos boms")
-        # Aqui posso começar a fazer vaaaaarias simulações!
-    print(f"Acuracia desse metodo: {acc}/{total}: {acc/total}")
+                    proximos_shi[idx] = dist
+            print(f"Proximos_shi: {proximos_shi}")
+
+            for c in corners_subpix:
+                dist = cv.norm(p - c, cv.NORM_L2)
+                if  dist < 20 and dist < proximos_sub[idx]:
+                    #Verifica se o ponto está numa distancia de 20 pixels
+                    proximos_sub[idx] = dist
+            print(f"Proximos_sub: {proximos_sub}")
+        media_shi = np.mean(proximos_shi)
+        media_sub = np.mean(proximos_sub)
+        y_shi.append(media_shi)
+        y_sub.append(media_sub)
+        x_ambos.append(i)
+    x_ambos = np.array(x_ambos)
+    y_shi = np.array(y_shi)
+    y_sub = np.array(y_sub)
+
+    y_diff = y_shi - y_sub
+    #print(f"Shapes. x: {x_ambos.shape}; y_shi: {y_shi.shape}; y_sub: {y_sub.shape}")
+    print(y_shi)
+    print(y_sub)
+    plt.plot(x_ambos, y_shi, label="Shi Tomasi")
+
+    plt.plot(x_ambos, y_sub,label="Acuracia sub pixel")
+    plt.xlabel("Número da imagem")
+    plt.ylabel("Média da distancia dos 4 cantos mais proximos")
+
+    plt.title("Comparação entre métodos de detecção de bordas")
+    plt.legend(loc='best')
+    plt.show()
+
+
     # gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
-
-    # corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
-
-    # winSize = (5, 5)
-    # zeroZone = (-1, -1)
-    # criteria = (cv.TERM_CRITERIA_EPS + cv.TermCriteria_COUNT, 40, 0.001)
-    # # Calculate the refined corner locations
-    # corners_subpix = cv.cornerSubPix(gray, corners, winSize, zeroZone, criteria)
 
 
     return 0
