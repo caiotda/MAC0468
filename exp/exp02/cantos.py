@@ -61,25 +61,13 @@ def seleciona_pontos(event, x, y, flags, param):
     selecionar 4 pontos, realiza uma transformação de perspectiva utilizando o
     quadrilatero determinado pelos pontos escolhidos.
     """
-    global selecionados, quant, corners, img
+    global selecionados, quant, corners, entrada
     if event == cv.EVENT_LBUTTONDOWN and quant < 4:
         poix, poiy = x,y
-        for corner in corners:
-            xc, yc = corner.ravel()
-            if abs(x - xc) <= 3 and abs(y - yc) <= 3:
-                # Se o ponto selecionado estiver dentro de uma janela 7x7
-                # centrada em (xc, yc), interpretamos o clique do usuario como
-                # um clique em (xc, yc), logo, tomamos essas coordenadas como
-                # pontos de interesse e mudamos a cor do ponto detectado.
-                poix, poiy = xc, yc
-                cv.circle(img,(poix,poiy), 5,(0, 0, 255), -1)
-                cv.imshow("Selecione Cantos", img)
-                selecionados.append((poix, poiy))
-                break
         if (poix, poiy) not in selecionados:
             selecionados.append((poix, poiy))
-            cv.circle(img,(poix,poiy),3,255,-1)
-            cv.imshow("Selecione Cantos", img)
+            cv.circle(entrada,(poix,poiy),3,255,-1)
+            cv.imshow("Selecione Cantos", entrada)
         quant += 1
 
         if quant == 4:
@@ -118,10 +106,8 @@ def seleciona_pontos(event, x, y, flags, param):
                     (largura_media, altura_media), \
                     (0, altura_media)])
             selecionados = np.float32(selecionados)
-
-            M = cv.getPerspectiveTransform(selecionados,pontos_perspectiva)
-            dst = cv.warpPerspective(original,M,(largura_media, altura_media))
-            cv.imshow("Document", dst)
+            quant = 0
+            selecionados = []
 
 
 def extrai_matriz_homografia(row):
@@ -151,6 +137,8 @@ def inverte_homografia(row, M):
     return poi
 
 def calcula_score(csv):
+    global selecionados, quant, corners, entrada, original
+    quant = 0
     """
     (csv) -> lista de valores
 
@@ -160,19 +148,26 @@ def calcula_score(csv):
     o que eu quero fazer aqui é abrir a imagem gabarito,
     abrir a imagem de entrada e aplicar a matriz de homeografia
     """
-    print(csv)
+
+
     acc = 0
     total = 0
-    for i, row in csv.iterrows():
+    for _, row in csv.iterrows():
         n = 0
         # Itera as linhas da tabela
-        M = extrai_matriz_homografia(row)
-        poi = inverte_homografia(row, M)
+        selecionados = []
+        #M = extrai_matriz_homografia(row)
+        #poi = inverte_homografia(row, M)
         entrada = abre_imagem(row['entrada'])
+        original = np.copy(entrada)
+        cv.imshow("Selecione Cantos", entrada)
+        cv.setMouseCallback("Selecione Cantos", seleciona_pontos)
+        cv.waitKey(0)
+        print(selecionados)
         gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
         corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
         for c in corners:
-            for p in poi:
+            for p in selecionados:
                 if  cv.norm(p - c, cv.NORM_L2) < 20:
                     #Verifica se o ponto está numa distancia de 20 pixels
                     n += 1
@@ -181,36 +176,15 @@ def calcula_score(csv):
         print(f"Para a imagem {row['entrada']} eu tive {n} pontos boms")
         # Aqui posso começar a fazer vaaaaarias simulações!
     print(f"Acuracia desse metodo: {acc}/{total}: {acc/total}")
-    print("-----------------------------------subpixel--------------------")
-    acc = 0
-    total = 0
-    for i, row in csv.iterrows():
-        n = 0
-        # Itera as linhas da tabela
-        M = extrai_matriz_homografia(row)
-        poi = inverte_homografia(row, M)
-        entrada = abre_imagem(row['entrada'])
-        gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
+    # gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
 
-        corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
+    # corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
 
-        winSize = (5, 5)
-        zeroZone = (-1, -1)
-        criteria = (cv.TERM_CRITERIA_EPS + cv.TermCriteria_COUNT, 40, 0.001)
-        # Calculate the refined corner locations
-        corners_subpix = cv.cornerSubPix(gray, corners, winSize, zeroZone, criteria)
-
-        for c in corners_subpix:
-            for p in poi:
-                if  cv.norm(p - c, cv.NORM_L2) < 20:
-                    #Verifica se o ponto está numa distancia de 20 pixels
-                    n += 1
-                    acc += 1
-                total += 1
-        print(f"Para a imagem {row['entrada']} eu tive {n} pontos boms")
-        ### Cataloga a quantidade de pontos dentro de uma janela 10x10
-
-    print(f"Acuracia desse metodo: {acc}/{total}: {acc/total}")
+    # winSize = (5, 5)
+    # zeroZone = (-1, -1)
+    # criteria = (cv.TERM_CRITERIA_EPS + cv.TermCriteria_COUNT, 40, 0.001)
+    # # Calculate the refined corner locations
+    # corners_subpix = cv.cornerSubPix(gray, corners, winSize, zeroZone, criteria)
 
 
     return 0
@@ -230,17 +204,13 @@ def abre_imagem(path):
 
 def main():
     debug = True
-    global selecionados, quant, corners, img, original
     data = pd.read_csv('./tabela.csv', skipinitialspace=True)
     entrada = data['entrada']
     if debug:
         score_entrada = calcula_score(data)
     else:
-        quant = 0
-        selecionados = []
         path = ''
         img = abre_imagem(path)
-        original = np.copy(img)
         # Copia da imagem de entrada, utilizada para limparmos os circulos
         # desenhados sobre ela e realizarmos a operação de transformação de
         # perspectiva.
@@ -257,10 +227,7 @@ def main():
         for i in corners:
             x,y = i.ravel()
             cv.circle(img,(x,y),3,255,-1)
-        cv.imshow("Selecione Cantos", img)
 
-        cv.setMouseCallback("Selecione Cantos", seleciona_pontos)
-        cv.waitKey(0)
 
 if __name__== '__main__':
     main()
