@@ -124,6 +124,31 @@ def seleciona_pontos(event, x, y, flags, param):
             cv.imshow("Document", dst)
 
 
+def extrai_matriz_homografia(row):
+    """(PANDAS ROW) -> Matriz
+    """
+    params = ['h00', 'h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'h22']
+    M = []
+    for p in params:
+        val = row[p]
+        M.append(val)
+    M = np.array(M)
+    M = M.reshape((3,3))
+    return M
+
+
+def inverte_homografia(row, M):
+    """(pandas row, Matriz) -> Vetor
+    Recebe uma linha de um dataframe e uma matriz de homografia.
+    Inverte a matriz de homografia e obtem os pontos utilizados para gerar
+    a matriz de homografia.
+    """
+    saida = abre_imagem(row['saida'])
+    h, w, _ = saida.shape
+    poi = np.float32([[[0,0]], [[w, 0]], [[w, h]], [[0, h]]])
+    M_inv = np.linalg.inv(M)
+    poi = cv.perspectiveTransform(poi, M_inv)
+    return poi
 
 def calcula_score(csv):
     """
@@ -136,28 +161,17 @@ def calcula_score(csv):
     abrir a imagem de entrada e aplicar a matriz de homeografia
     """
     debug = False
-    params = ['h00', 'h01', 'h02', 'h10', 'h11', 'h12', 'h20', 'h21', 'h22']
-    M = []
-    i = 10
     print(csv)
-    for p in params:
-        val = csv[p][i]
-        M.append(val)
-    M = np.array(M)
-    M = M.reshape((3,3))
-    original = abre_imagem(csv['entrada'][i])
-    saida = abre_imagem(csv['saida'][i])
-    h, w, _ = saida.shape
-    print(h, w)
-    poi = np.float32([[[0,0]], [[w, 0]], [[w, h]], [[0, h]]])
-    M_inv = np.linalg.inv(M)
-    poi_orig = cv.perspectiveTransform(np.float32(poi), np.float32(M_inv))
-    print(poi_orig)
+    for i, row in csv.iterrows():
+        # Itera as linhas da tabela
+        M = extrai_matriz_homografia(row)
+        poi = inverte_homografia(row, M)
+        print(poi)
+        # Aqui posso começar a fazer vaaaaarias simulações!
+    original = abre_imagem(row['entrada'])
     cv.imshow("Imagem original", original)
 
     cv.waitKey(0)
-    if debug:
-        cv.imshow('teste', teste)
 
     return 0
 
