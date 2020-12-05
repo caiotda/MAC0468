@@ -160,18 +160,58 @@ def calcula_score(csv):
     o que eu quero fazer aqui é abrir a imagem gabarito,
     abrir a imagem de entrada e aplicar a matriz de homeografia
     """
-    debug = False
     print(csv)
+    acc = 0
+    total = 0
     for i, row in csv.iterrows():
+        n = 0
         # Itera as linhas da tabela
         M = extrai_matriz_homografia(row)
         poi = inverte_homografia(row, M)
-        print(poi)
+        entrada = abre_imagem(row['entrada'])
+        gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
+        corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
+        for c in corners:
+            for p in poi:
+                if  cv.norm(p - c, cv.NORM_L2) < 20:
+                    #Verifica se o ponto está numa distancia de 20 pixels
+                    n += 1
+                    acc += 1
+                total += 1
+        print(f"Para a imagem {row['entrada']} eu tive {n} pontos boms")
         # Aqui posso começar a fazer vaaaaarias simulações!
-    original = abre_imagem(row['entrada'])
-    cv.imshow("Imagem original", original)
+    print(f"Acuracia desse metodo: {acc}/{total}: {acc/total}")
+    print("-----------------------------------subpixel--------------------")
+    acc = 0
+    total = 0
+    for i, row in csv.iterrows():
+        n = 0
+        # Itera as linhas da tabela
+        M = extrai_matriz_homografia(row)
+        poi = inverte_homografia(row, M)
+        entrada = abre_imagem(row['entrada'])
+        gray = cv.cvtColor(entrada, cv.COLOR_BGR2GRAY)
 
-    cv.waitKey(0)
+        corners = cv.goodFeaturesToTrack(gray,100,0.01,7)
+
+        winSize = (5, 5)
+        zeroZone = (-1, -1)
+        criteria = (cv.TERM_CRITERIA_EPS + cv.TermCriteria_COUNT, 40, 0.001)
+        # Calculate the refined corner locations
+        corners_subpix = cv.cornerSubPix(gray, corners, winSize, zeroZone, criteria)
+
+        for c in corners_subpix:
+            for p in poi:
+                if  cv.norm(p - c, cv.NORM_L2) < 20:
+                    #Verifica se o ponto está numa distancia de 20 pixels
+                    n += 1
+                    acc += 1
+                total += 1
+        print(f"Para a imagem {row['entrada']} eu tive {n} pontos boms")
+        ### Cataloga a quantidade de pontos dentro de uma janela 10x10
+
+    print(f"Acuracia desse metodo: {acc}/{total}: {acc/total}")
+
 
     return 0
 
