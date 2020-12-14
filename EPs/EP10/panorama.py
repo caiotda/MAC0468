@@ -155,11 +155,11 @@ def main():
             img_prev = img
             kp_prev = kp
             des_prev = des
-            if DEBUG:
-                cv.imshow("Imagem carregada", img)
-                cv.imshow(f"ROI encontrada entre as imagens {i-1} e {i}", img2prev)
+            while DEBUG and True:
                 cv.imshow(f"Resultado intermediario na iteracao {i}", BASE)
-                cv.waitKey(0)
+                k = cv.waitKey(0)
+                if k == 13:
+                    break
         # Mapeia a imagem 2 para o sistema de coordenadas da imagem 1, então
         # mapeia para a imagem base
 
