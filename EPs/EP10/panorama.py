@@ -41,7 +41,7 @@
 
 '''
 
-import cv2
+import cv2 as cv
 import numpy as np
 import argparse
 
@@ -87,6 +87,7 @@ def main():
 
     files = glob(args.imagens)
     files = sorted(files)
+    imgs = []
     n = len(files)
     if n == 0:
         print(f"Não achei nenhuma imagem usando {files}")
@@ -95,7 +96,37 @@ def main():
         print(f"Achei as seguintes {n} imagens para processar:\n")
         for i, f in enumerate( files ):
             print(f"{i} : {f}")
+            img = cv.imread(f)
+            imgs.append(img)
+        if DEBUG:
+            for i, img in enumerate(imgs):
+                cv.imshow(f"Imagem {i}", img)
+                cv.waitKey(0)
+        IMG_0 = imgs[0]
+        w, h, _ = IMG_0.shape
+        w = w * ESCALA_W
+        h = h * ESCALA_H
+        print(f"Width: {w}; Height: {h}")
+        BASE = np.zeros((h, w), dtype='uint8')
+        print(BASE.shape)
 
+        H0 = np.eye(3)
+        if DELTA_W:
+            offset_horizontal = DELTA_W
+        else:
+            offset_horizontal = 3*w//8
+
+        if DELTA_H:
+            offset_vertical = DELTA_H
+        else:
+            offset_vertical = 3*h//8
+        H0[0,2] =  offset_horizontal
+        H0[1,2] = offset_vertical
+
+        res1 = cv.warpPerspective(IMG_0, H0, (w, h))
+        cv.imshow("Teste", res1)
+        cv.imshow("Teste imagem 1", IMG_0)
+        cv.waitKey(0)
     print("Vixe! ainda não fiz o EP10 ;-(")
 
 
