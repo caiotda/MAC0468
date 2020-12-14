@@ -87,8 +87,6 @@ def main():
 
     files = glob(args.imagens)
     files = sorted(files)
-    imgs = []
-    imgs_grey = []
     n = len(files)
     if METODO == 'SIFT':
         forcabruta = cv.BFMatcher( normType=cv.NORM_L2, crossCheck=True)
@@ -102,28 +100,15 @@ def main():
         return
     else:
         print(f"Achei as seguintes {n} imagens para processar:\n")
-        for i, f in enumerate( files ):
-            print(f"{i} : {f}")
-            img = cv.imread(f)
-            imgs_grey.append(cv.cvtColor(img, cv.COLOR_BGR2GRAY))
-            imgs.append(img)
+        img_prev = cv.imread(files[0])
 
-        if DEBUG:
-            for i, img in enumerate(imgs):
-                cv.imshow(f"Imagem {i}", img)
-                cv.waitKey(0)
+        IMG0_GRAY = cv.cvtColor(img_prev, cv.COLOR_BGR2GRAY)
+        kp_prev, des_prev = metodo.detectAndCompute(IMG0_GRAY, None )
 
-        IMG_0 = imgs[0]
-        IMG_1 = imgs[1]
-
-        IMG0_GRAY = imgs_grey[0]
-        IMG1_GRAY = imgs_grey[1]
-        w, h, _ = IMG_0.shape
+        w, h, _ = img_prev.shape
         w = w * ESCALA_W
         h = h * ESCALA_H
-        print(f"Width: {w}; Height: {h}")
 
-        H0 = np.eye(3)
         if DELTA_W:
             offset_horizontal = DELTA_W
         else:
@@ -133,39 +118,55 @@ def main():
             offset_vertical = DELTA_H
         else:
             offset_vertical = 3*h//8
+
+        H0 = np.eye(3)
         H0[0,2] =  offset_horizontal
         H0[1,2] = offset_vertical
-        kp0, des0 = metodo.detectAndCompute(IMG0_GRAY, None )
-        kp1, des1 = metodo.detectAndCompute(IMG1_GRAY, None )
 
-        matches = forcabruta.match(des0, des1)
+        BASE = cv.warpPerspective(img_prev, H0, (w, h))
+        files = files[1:]
+        H_acc = H0
+        # Itero pelas imagens restantes e anexando a base
+        for i, f in enumerate( files ):
+            print(f"{i} : {f}")
+            img = cv.imread(f)
+            img_g = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+            kp, des = metodo.detectAndCompute(img_g, None )
+            matches = forcabruta.match(des_prev, des)
 
-        pts0 = np.zeros( (len(matches), 2), dtype=np.float32)
-        pts1 = np.zeros( (len(matches), 2), dtype=np.float32)
+            pts0 = np.zeros( (len(matches), 2), dtype=np.float32)
+            pts1 = np.zeros( (len(matches), 2), dtype=np.float32)
 
-        for i, match in enumerate(matches):
-            pts0[i,:] = kp0[match.queryIdx].pt
-            pts1[i,:] = kp1[match.trainIdx].pt
 
-        # Mapeia pontos da imagem 2 para o sistema de coordenadas da imagem 1
-        height, width = IMG_0.shape[:2]
-        H1, _ = cv.findHomography(pts1, pts0, method=cv.RANSAC)
-        img21Reg = cv.warpPerspective( IMG_1, H1, (width, height) )
+            for j, match in enumerate(matches):
+                pts0[j,:] = kp_prev[match.queryIdx].pt
+                pts1[j,:] = kp[match.trainIdx].pt
 
+            # Mapeia pontos da imagem 2 para o sistema de coordenadas da imagem 1
+
+            height, width = img_prev.shape[:2]
+            H_curr, _ = cv.findHomography(pts1, pts0, method=cv.RANSAC)
+            img2prev = cv.warpPerspective( img, H_curr, (width, height) )
+
+            H_acc = H_acc @ H_curr
+            w,h,_ = BASE.shape
+            aux = cv.warpPerspective(img, H_acc, (h, w))
+            BASE = np.logical_and(BASE==0, aux)*aux + BASE
+            img_prev = img
+            kp_prev = kp
+            des_prev = des
+            if DEBUG:
+                cv.imshow("Imagem carregada", img)
+                cv.imshow(f"ROI encontrada entre as imagens {i-1} e {i}", img2prev)
+                cv.imshow(f"Resultado intermediario na iteracao {i}", BASE)
+                cv.waitKey(0)
         # Mapeia a imagem 2 para o sistema de coordenadas da imagem 1, então
         # mapeia para a imagem base
-        res2 = cv.warpPerspective(IMG_1, H0@H1, (w, h))
 
 
 
-        #aux0 = cv.drawKeypoints(IMG_0, kp0, None, (0, 0, 255), 4)
-        BASE = cv.warpPerspective(IMG_0, H0, (w, h))
-        res3 = np.logical_and(BASE==0, res2)*res2 + BASE
-        cv.imshow("Teste", BASE)
-        cv.imshow("BASE com img1 + img2", res3)
-        cv.imshow("Teste imagem 1", IMG_0)
-        cv.imshow("Teste imagem 2", IMG_1)
-        cv.imshow("ROI entre imagem 1 e 2", img21Reg)
+
+        cv.imshow("Resultado final", BASE)
         cv.waitKey(0)
 
 
