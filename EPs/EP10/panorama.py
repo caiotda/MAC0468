@@ -91,8 +91,10 @@ def main():
     imgs_grey = []
     n = len(files)
     if METODO == 'SIFT':
+        forcabruta = cv.BFMatcher( normType=cv.NORM_L2, crossCheck=True)
         metodo = cv.SIFT_create()
     else:
+        forcabruta = cv.BFMatcher( normType=cv.NORM_HAMMING, crossCheck=True)
         metodo = cv.ORB_create()
 
     if n == 0:
@@ -112,6 +114,10 @@ def main():
                 cv.waitKey(0)
 
         IMG_0 = imgs[0]
+        IMG_1 = imgs[1]
+
+        IMG0_GRAY = imgs_grey[0]
+        IMG1_GRAY = imgs_grey[1]
         w, h, _ = IMG_0.shape
         w = w * ESCALA_W
         h = h * ESCALA_H
@@ -129,13 +135,37 @@ def main():
             offset_vertical = 3*h//8
         H0[0,2] =  offset_horizontal
         H0[1,2] = offset_vertical
-        kp1, des1 = metodo.detectAndCompute( imgs_grey[0], None )
-        aux1 = cv.drawKeypoints(IMG_0, kp1, None, (0, 0, 255), 4)
+        kp0, des0 = metodo.detectAndCompute(IMG0_GRAY, None )
+        kp1, des1 = metodo.detectAndCompute(IMG1_GRAY, None )
 
+        matches = forcabruta.match(des0, des1)
+
+        pts0 = np.zeros( (len(matches), 2), dtype=np.float32)
+        pts1 = np.zeros( (len(matches), 2), dtype=np.float32)
+
+        for i, match in enumerate(matches):
+            pts0[i,:] = kp0[match.queryIdx].pt
+            pts1[i,:] = kp1[match.trainIdx].pt
+
+        # Mapeia pontos da imagem 2 para o sistema de coordenadas da imagem 1
+        height, width = IMG_0.shape[:2]
+        H1, _ = cv.findHomography(pts1, pts0, method=cv.RANSAC)
+        img21Reg = cv.warpPerspective( IMG_1, H1, (width, height) )
+
+        # Mapeia a imagem 2 para o sistema de coordenadas da imagem 1, então
+        # mapeia para a imagem base
+        res2 = cv.warpPerspective(IMG_1, H0@H1, (w, h))
+
+
+
+        #aux0 = cv.drawKeypoints(IMG_0, kp0, None, (0, 0, 255), 4)
         BASE = cv.warpPerspective(IMG_0, H0, (w, h))
+        res3 = np.logical_and(BASE==0, res2)*res2 + BASE
         cv.imshow("Teste", BASE)
+        cv.imshow("BASE com img1 + img2", res3)
         cv.imshow("Teste imagem 1", IMG_0)
-        cv.imshow("KEY POINTS imagem 1", aux1)
+        cv.imshow("Teste imagem 2", IMG_1)
+        cv.imshow("ROI entre imagem 1 e 2", img21Reg)
         cv.waitKey(0)
 
 
