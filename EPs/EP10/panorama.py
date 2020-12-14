@@ -105,19 +105,22 @@ def main():
         IMG0_GRAY = cv.cvtColor(img_prev, cv.COLOR_BGR2GRAY)
         kp_prev, des_prev = metodo.detectAndCompute(IMG0_GRAY, None )
 
-        w, h, _ = img_prev.shape
-        w = w * ESCALA_W
-        h = h * ESCALA_H
+        n_lins, n_cols, _ = img_prev.shape
+        w = n_cols * ESCALA_W
+        h = n_lins * ESCALA_H
+
+        img_w = n_cols
+        img_h = n_lins
 
         if DELTA_W:
             offset_horizontal = DELTA_W
         else:
-            offset_horizontal = 3*w//8
+            offset_horizontal = w//2 - img_w//2
 
         if DELTA_H:
             offset_vertical = DELTA_H
         else:
-            offset_vertical = 3*h//8
+            offset_vertical = h//2 - img_h//2
 
         H0 = np.eye(3)
         H0[0,2] =  offset_horizontal
@@ -147,8 +150,8 @@ def main():
             H_curr, _ = cv.findHomography(pts1, pts0, method=cv.RANSAC)
 
             H_acc = H_acc @ H_curr
-            w,h,_ = BASE.shape
-            aux = cv.warpPerspective(img, H_acc, (h, w))
+            h,w,_ = BASE.shape
+            aux = cv.warpPerspective(img, H_acc, (w, h))
             BASE = np.logical_and(BASE==0, aux)*aux + BASE
             img_prev = img
             kp_prev = kp
@@ -158,8 +161,6 @@ def main():
                 k = cv.waitKey(0)
                 if k == 13:
                     break
-        # Mapeia a imagem 2 para o sistema de coordenadas da imagem 1, então
-        # mapeia para a imagem base
 
 
 
