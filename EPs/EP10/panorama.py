@@ -39,6 +39,9 @@
 
     Descrição de ajuda ou indicação de fonte:
 
+    A implementação foi inspirada no scritp `demo.py`, escrito no decorrer
+    das aulas de 01/12/20 e 03/12/20.
+
 '''
 
 import cv2 as cv
@@ -89,10 +92,12 @@ def main():
     files = sorted(files)
     n = len(files)
     if METODO == 'SIFT':
-        forcabruta = cv.BFMatcher( normType=cv.NORM_L2, crossCheck=True)
+        forcabruta = \
+            cv.BFMatcher( normType=cv.NORM_L2, crossCheck=CROSSCHECK)
         metodo = cv.SIFT_create()
     else:
-        forcabruta = cv.BFMatcher( normType=cv.NORM_HAMMING, crossCheck=True)
+        forcabruta = \
+            cv.BFMatcher( normType=cv.NORM_HAMMING, crossCheck=CROSSCHECK)
         metodo = cv.ORB_create()
 
     if n == 0:
@@ -129,9 +134,8 @@ def main():
         BASE = cv.warpPerspective(img_prev, H0, (w, h))
         files = files[1:]
         H_acc = H0
-        # Itero pelas imagens restantes e anexando a base
+        # Itero pelas imagens restantes e as anexo na BASE
         for i, f in enumerate( files ):
-            print(f"{i} : {f}")
             img = cv.imread(f)
             img_g = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
             kp, des = metodo.detectAndCompute(img_g, None )
@@ -145,19 +149,28 @@ def main():
                 pts0[j,:] = kp_prev[match.queryIdx].pt
                 pts1[j,:] = kp[match.trainIdx].pt
 
-            # Mapeia pontos da imagem 2 para o sistema de coordenadas da imagem 1
-
+            # Mapeia pontos da imagem atual para o sistema de coordenadas da
+            # imagem anterior
             H_curr, _ = cv.findHomography(pts1, pts0, method=cv.RANSAC)
 
+            # Monta a matriz de homografia que leva a imagem atual para o
+            # sistema de coordenadas da base
             H_acc = H_acc @ H_curr
+
             h,w,_ = BASE.shape
             aux = cv.warpPerspective(img, H_acc, (w, h))
+
+            # Seleciona regiões de intersecção
             BASE = np.logical_and(BASE==0, aux)*aux + BASE
+
             img_prev = img
             kp_prev = kp
             des_prev = des
             while DEBUG and True:
                 cv.imshow(f"Resultado intermediario na iteracao {i}", BASE)
+
+                # Interrompe a exibição da imagem apenas se o usuario apertar
+                # enter
                 k = cv.waitKey(0)
                 if k == 13:
                     break
