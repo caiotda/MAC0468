@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------------
-# LEIA E PREENCHA O CABEÇALHO 
+# LEIA E PREENCHA O CABEÇALHO
 # NÃO ALTERE OS NOMES DAS FUNÇÕES
 # NÃO APAGUE OS DOCSTRINGS
 #------------------------------------------------------------------
 
 '''
 
-    Nome:
-    NUSP:
+    Nome: Caio Túlio de Deus Andrade
+    NUSP: 9797232
 
     Ao preencher esse cabeçalho com o meu nome e o meu número USP,
     declaro que todas as partes originais desse exercício programa (EP)
-    foram desenvolvidas e implementadas por mim e que portanto não 
+    foram desenvolvidas e implementadas por mim e que portanto não
     constituem desonestidade acadêmica ou plágio.
     Declaro também que sou responsável por todas as cópias desse
     programa e que não distribui ou facilitei a sua distribuição.
     Estou ciente que os casos de plágio e desonestidade acadêmica
-    serão tratados segundo os critérios divulgados na página da 
+    serão tratados segundo os critérios divulgados na página da
     disciplina.
     Entendo que EPs sem assinatura devem receber nota zero e, ainda
     assim, poderão ser punidos por desonestidade acadêmica.
@@ -34,7 +34,7 @@
         A monitora me explicou que eu devia utilizar a função int() quando
         fazemos leitura de números inteiros.
 
-        A minha função quicksort() foi baseada na descrição encontrada na 
+        A minha função quicksort() foi baseada na descrição encontrada na
         página https://www.ime.usp.br/~pf/algoritmos/aulas/quick.html.
 
     Descrição de ajuda ou indicação de fonte:
@@ -48,7 +48,7 @@ import argparse
 # glob pega os nomes dos arquivos em uma pasta
 from glob import glob
 
-#-------------------------------------------------------------------------- 
+#--------------------------------------------------------------------------
 # programa principal
 
 def main():
@@ -63,7 +63,7 @@ def main():
     ap.add_argument('-dw', '--deltaW', required=False, help = 'posição horizontal da 1a imagem')
     ap.add_argument('-dh', '--deltaH', required=False, help = 'posição vertical da 1a imagem')
     ap.add_argument('-c', '--crosscheck', required=False, action='store_false', help = 'desliga crosscheck no cálculo de matches')
- 
+
     args = ap.parse_args()
     print(args)
 
@@ -98,7 +98,7 @@ def main():
 
     print("Vixe! ainda não fiz o EP10 ;-(")
 
-    
+
 if __name__== '__main__':
     main()
 
