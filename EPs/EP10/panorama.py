@@ -88,7 +88,13 @@ def main():
     files = glob(args.imagens)
     files = sorted(files)
     imgs = []
+    imgs_grey = []
     n = len(files)
+    if METODO == 'SIFT':
+        metodo = cv.SIFT_create()
+    else:
+        metodo = cv.ORB_create()
+
     if n == 0:
         print(f"Não achei nenhuma imagem usando {files}")
         return
@@ -97,18 +103,19 @@ def main():
         for i, f in enumerate( files ):
             print(f"{i} : {f}")
             img = cv.imread(f)
+            imgs_grey.append(cv.cvtColor(img, cv.COLOR_BGR2GRAY))
             imgs.append(img)
+
         if DEBUG:
             for i, img in enumerate(imgs):
                 cv.imshow(f"Imagem {i}", img)
                 cv.waitKey(0)
+
         IMG_0 = imgs[0]
         w, h, _ = IMG_0.shape
         w = w * ESCALA_W
         h = h * ESCALA_H
         print(f"Width: {w}; Height: {h}")
-        BASE = np.zeros((h, w), dtype='uint8')
-        print(BASE.shape)
 
         H0 = np.eye(3)
         if DELTA_W:
@@ -122,12 +129,14 @@ def main():
             offset_vertical = 3*h//8
         H0[0,2] =  offset_horizontal
         H0[1,2] = offset_vertical
+        kp1, des1 = metodo.detectAndCompute( imgs_grey[0], None )
+        aux1 = cv.drawKeypoints(IMG_0, kp1, None, (0, 0, 255), 4)
 
-        res1 = cv.warpPerspective(IMG_0, H0, (w, h))
-        cv.imshow("Teste", res1)
+        BASE = cv.warpPerspective(IMG_0, H0, (w, h))
+        cv.imshow("Teste", BASE)
         cv.imshow("Teste imagem 1", IMG_0)
+        cv.imshow("KEY POINTS imagem 1", aux1)
         cv.waitKey(0)
-    print("Vixe! ainda não fiz o EP10 ;-(")
 
 
 if __name__== '__main__':
