@@ -144,9 +144,7 @@ def main():
 
             # Mapeia pontos da imagem 2 para o sistema de coordenadas da imagem 1
 
-            height, width = img_prev.shape[:2]
             H_curr, _ = cv.findHomography(pts1, pts0, method=cv.RANSAC)
-            img2prev = cv.warpPerspective( img, H_curr, (width, height) )
 
             H_acc = H_acc @ H_curr
             w,h,_ = BASE.shape
